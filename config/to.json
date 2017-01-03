@@ -1,0 +1,9 @@
+[
+  {
+    "name": "Musterfabrik",
+    "c_o": "Max Mustermann",
+    "street": "Musterstreet 123",
+    "city": "12345 Musterstadt",
+    "additional_info": ["Musterabteilung"]
+  }
+]

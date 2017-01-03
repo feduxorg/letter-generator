@@ -1,0 +1,76 @@
+\documentclass[%
+%fromphone=true,
+fromalign=left,
+foldmarks=BmTP,
+draft=true,
+]{scrlttr2}
+%%%%%%%%%%% pakete %%%%%%%%%%%%%%
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,german]{babel}
+\usepackage[%
+pdfborder=0 0 0,
+plainpages=false,
+pdftitle={titel},
+pdfauthor={{{ sender.Name() }}},
+]{hyperref}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{blindtext}
+\usepackage{paralist}
+
+\begin{document}
+\pagestyle{headings}
+
+%%%%%%%%%%% Brief %%%%%%%%%%%%%%%%
+%%%%%%%%%%% Empfänger %%%%%%%%%%%%%%%%%
+\begin{recipient.Letter()}{%
+{{ recipient.Name() }}\\
+{{ if len(sender.C_o()) > 0 }}
+{{ recipient.C_o() }}\\
+{{ end }}
+{{ recipient.Street() }}\\
+{{ recipient.City() }}\\
+}
+
+%%%%%%%%%%%%% Absender %%%%%%%%%%%%%%%%%
+\setkomavar{fromname}{{{ sender.Name() }}}
+{{ if len(sender.Phone()) > 0 }}
+\setkomavar{fromphone}{{{ sender.Phone() }}}
+{{ end }}
+\setkomavar{fromaddress}{{{ sender.Street()}}\\{{sender.City()}}}
+
+%%%%%%%%%%%%% Betreff %%%%%%%%%%%%%%%%
+{{ if len(metadata.Subject()) > 0 }}
+\setkomavar{subject}{{{ metadata.Subject() }}}
+{{ end }}
+
+%%%%%%%%%%%%% Unterschrift %%%%%%%%%%%%%%%%
+{{ if len(metadata.Signature()) > 0 }}
+\setkomavar{signature}{{{ metadata.Signature() }}}
+{{ end }}
+
+%\LoadLetterOption{DIN}
+{{ if len(metadata.Opening()) > 0 }}
+\opening{{{ metadata.Opening() }}}
+{{ end }}
+
+hiermit kündige ich meinen Vertrag fristgerecht zum nächstmöglichen Zeitpunkt.
+Bitte senden Sie mir eine schriftliche Kündigungsbestätigung unter Angabe des
+Beendigungszeitpunktes zu. Eine Kontaktaufnahme Ihrerseits zum Zweck der
+Rückwerbung ist nicht erwünscht. Ich bitte Sie höflich, davon abzusehen.
+<% unless text.blank? -%><%= text %><% end -%>
+
+\closing{{{ metadata.Closing() }}}
+%%%%%%%%%%%%% Postscriptum %%%%%%%%%%%%%%%
+{{ if metadata.HasPs() }}
+\ps PS: 
+{{ end }}
+
+%%%%%%%%%%%%% Anhänge %%%%%%%%%%%%%%%
+{{ if metadata.HasAttachments() }}
+\encl{}
+{{ end }}
+
+\end{letter}
+\end{document}
