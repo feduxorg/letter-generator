@@ -12,7 +12,7 @@ draft=true,
 pdfborder=0 0 0,
 plainpages=false,
 pdftitle={titel},
-pdfauthor={{{ Sender.Name }}},
+pdfauthor={ {{- .Sender.Name -}} },
 ]{hyperref}
 \usepackage{graphicx}
 \usepackage{xcolor}
@@ -24,53 +24,50 @@ pdfauthor={{{ Sender.Name }}},
 
 %%%%%%%%%%% Brief %%%%%%%%%%%%%%%%
 %%%%%%%%%%% Empfänger %%%%%%%%%%%%%%%%%
-\begin{{{Recipient.Letter}}}{%
-{{ Recipient.Name }}\\
-{{ if len(Sender.C_O) > 0 }}
-{{ Recipient.C_O }}\\
-{{ end }}
-{{ Recipient.Street }}\\
-{{ Recipient.City }}\\
+\begin{letter}{%
+{{ .Recipient.Name }}\\
+{{- $length := len .Recipient.C_O }}{{ if gt $length 0 }}
+{{ .Recipient.C_O }}\\
+{{ end -}}
+{{ .Recipient.Street }}\\
+{{ .Recipient.City }}\\
 }
 
 %%%%%%%%%%%%% Absender %%%%%%%%%%%%%%%%%
-\setkomavar{fromname}{{{ Sender.Name }}}
-{{ if len(Sender.Phone) > 0 }}
-\setkomavar{fromphone}{{{ Sender.Phone }}}
-{{ end }}
-\setkomavar{fromaddress}{{{ Sender.Street}}\\{{Sender.City}}}
+\setkomavar{fromname}{ {{- .Sender.Name -}} }
+{{- $length := len .Sender.Phone }}{{ if gt $length 0 }}
+\setkomavar{fromphone}{ {{- .Sender.Phone -}} }
+{{ end -}}
+\setkomavar{fromaddress}{ {{- .Sender.Street }}\\{{ .Sender.City -}} }
 
 %%%%%%%%%%%%% Betreff %%%%%%%%%%%%%%%%
-{{ if len(Metadata.Subject) > 0 }}
-\setkomavar{subject}{{{ Metadata.Subject }}}
-{{ end }}
+{{- $length := len .Metadata.Subject }}{{ if gt $length 0 }}
+\setkomavar{subject}{ {{- .Metadata.Subject -}} }
+{{- end }}
 
 %%%%%%%%%%%%% Unterschrift %%%%%%%%%%%%%%%%
-{{ if len(Metadata.Signature) > 0 }}
-\setkomavar{signature}{{{ Metadata.Signature }}}
-{{ end }}
+{{- $length := len .Metadata.Signature}}{{ if gt $length 0 }}
+\setkomavar{signature}{ {{- .Metadata.Signature -}} }
+{{- end }}
 
 %\LoadLetterOption{DIN}
-{{ if len(Metadata.Opening) > 0 }}
-\opening{{{ Metadata.Opening }}}
-{{ end }}
 
-hiermit kündige ich meinen Vertrag fristgerecht zum nächstmöglichen Zeitpunkt.
-Bitte senden Sie mir eine schriftliche Kündigungsbestätigung unter Angabe des
-Beendigungszeitpunktes zu. Eine Kontaktaufnahme Ihrerseits zum Zweck der
-Rückwerbung ist nicht erwünscht. Ich bitte Sie höflich, davon abzusehen.
-<% unless text.blank? -%><%= text %><% end -%>
+{{- $length := len .Metadata.Opening }}{{ if gt $length 0 }}
+\opening{ {{- .Metadata.Opening -}} }
+{{- end }}
 
-\closing{{{ Metadata.Closing }}}
+TEXT
+
+\closing{ {{- .Metadata.Closing -}} }
 %%%%%%%%%%%%% Postscriptum %%%%%%%%%%%%%%%
-{{ if Metadata.HasPs == true }}
+{{- if eq .Metadata.HasPs true }}
 \ps PS: 
 {{ end }}
 
 %%%%%%%%%%%%% Anhänge %%%%%%%%%%%%%%%
-{{ if Metadata.HasAttachments == true}}
+{{- if eq .Metadata.HasAttachments true }}
 \encl{}
-{{ end }}
+{{ end -}}
 
 \end{letter}
 \end{document}

@@ -8,6 +8,7 @@ import (
 	"github.com/maxmeyer/letter-generator-go/sender"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 )
 
 func main() {
@@ -40,5 +41,16 @@ func main() {
 			template,
 			output_file,
 		)
+
+		thepath, err := filepath.Abs(output_file.Name())
+
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		fmt.Println(thepath)
+
+		defer output_file.Close()
 	}
 }
