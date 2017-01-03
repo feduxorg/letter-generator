@@ -12,7 +12,7 @@ draft=true,
 pdfborder=0 0 0,
 plainpages=false,
 pdftitle={titel},
-pdfauthor={{{ sender.Name() }}},
+pdfauthor={{{ Sender.Name }}},
 ]{hyperref}
 \usepackage{graphicx}
 \usepackage{xcolor}
@@ -24,35 +24,35 @@ pdfauthor={{{ sender.Name() }}},
 
 %%%%%%%%%%% Brief %%%%%%%%%%%%%%%%
 %%%%%%%%%%% Empfänger %%%%%%%%%%%%%%%%%
-\begin{recipient.Letter()}{%
-{{ recipient.Name() }}\\
-{{ if len(sender.C_o()) > 0 }}
-{{ recipient.C_o() }}\\
+\begin{{{Recipient.Letter}}}{%
+{{ Recipient.Name }}\\
+{{ if len(Sender.C_O) > 0 }}
+{{ Recipient.C_O }}\\
 {{ end }}
-{{ recipient.Street() }}\\
-{{ recipient.City() }}\\
+{{ Recipient.Street }}\\
+{{ Recipient.City }}\\
 }
 
 %%%%%%%%%%%%% Absender %%%%%%%%%%%%%%%%%
-\setkomavar{fromname}{{{ sender.Name() }}}
-{{ if len(sender.Phone()) > 0 }}
-\setkomavar{fromphone}{{{ sender.Phone() }}}
+\setkomavar{fromname}{{{ Sender.Name }}}
+{{ if len(Sender.Phone) > 0 }}
+\setkomavar{fromphone}{{{ Sender.Phone }}}
 {{ end }}
-\setkomavar{fromaddress}{{{ sender.Street()}}\\{{sender.City()}}}
+\setkomavar{fromaddress}{{{ Sender.Street}}\\{{Sender.City}}}
 
 %%%%%%%%%%%%% Betreff %%%%%%%%%%%%%%%%
-{{ if len(metadata.Subject()) > 0 }}
-\setkomavar{subject}{{{ metadata.Subject() }}}
+{{ if len(Metadata.Subject) > 0 }}
+\setkomavar{subject}{{{ Metadata.Subject }}}
 {{ end }}
 
 %%%%%%%%%%%%% Unterschrift %%%%%%%%%%%%%%%%
-{{ if len(metadata.Signature()) > 0 }}
-\setkomavar{signature}{{{ metadata.Signature() }}}
+{{ if len(Metadata.Signature) > 0 }}
+\setkomavar{signature}{{{ Metadata.Signature }}}
 {{ end }}
 
 %\LoadLetterOption{DIN}
-{{ if len(metadata.Opening()) > 0 }}
-\opening{{{ metadata.Opening() }}}
+{{ if len(Metadata.Opening) > 0 }}
+\opening{{{ Metadata.Opening }}}
 {{ end }}
 
 hiermit kündige ich meinen Vertrag fristgerecht zum nächstmöglichen Zeitpunkt.
@@ -61,14 +61,14 @@ Beendigungszeitpunktes zu. Eine Kontaktaufnahme Ihrerseits zum Zweck der
 Rückwerbung ist nicht erwünscht. Ich bitte Sie höflich, davon abzusehen.
 <% unless text.blank? -%><%= text %><% end -%>
 
-\closing{{{ metadata.Closing() }}}
+\closing{{{ Metadata.Closing }}}
 %%%%%%%%%%%%% Postscriptum %%%%%%%%%%%%%%%
-{{ if metadata.HasPs() }}
+{{ if Metadata.HasPs == true }}
 \ps PS: 
 {{ end }}
 
 %%%%%%%%%%%%% Anhänge %%%%%%%%%%%%%%%
-{{ if metadata.HasAttachments() }}
+{{ if Metadata.HasAttachments == true}}
 \encl{}
 {{ end }}
 
