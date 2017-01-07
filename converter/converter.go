@@ -1,12 +1,12 @@
 package converter
 
 import (
-	"fmt"
+	_ "fmt"
 	"github.com/maxmeyer/letter-generator-go/metadata"
 	"github.com/maxmeyer/letter-generator-go/recipients"
 	"github.com/maxmeyer/letter-generator-go/sender"
 	"io"
-	"os"
+	_ "os"
 	gotmpl "text/template"
 )
 
@@ -26,11 +26,10 @@ func (c *TemplateConverter) Transform(
 	output_file io.Writer,
 ) {
 
-	tmpl, err := gotmpl.New("test").Parse(template.Content)
+	tmpl, err := gotmpl.New("letter_template").Parse(template.Content)
 
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		panic(err)
 	}
 
 	context := Context{
@@ -42,7 +41,8 @@ func (c *TemplateConverter) Transform(
 	err = tmpl.Execute(output_file, context)
 
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		panic(err)
 	}
+
+	// fmt.Println(output_file)
 }
