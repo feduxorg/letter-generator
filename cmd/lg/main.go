@@ -28,7 +28,6 @@ func main() {
 	template.Read()
 
 	template_converter := converter.TemplateConverter{}
-	//pdf_path_converter := converter.PdfFilePathConverter{}
 	compiler := latex.Compiler{}
 
 	var letters []letter.Letter
@@ -36,13 +35,6 @@ func main() {
 	for _, r := range recipient_manager.Recipients {
 		lt := letter.New(r)
 		letters = append(letters, lt)
-
-		//old_filename := "index.tex"
-		escaped_string := strings.ToLower(r.Name)
-		re := regexp.MustCompile("[[:blank:]]")
-		escaped_string = re.ReplaceAllLiteralString(escaped_string, "-")
-		re = regexp.MustCompile("[^a-z0-9]")
-		escaped_string = re.ReplaceAllLiteralString(escaped_string, "")
 
 		fmt.Println(escaped_string)
 
@@ -64,8 +56,8 @@ func main() {
 		)
 	}
 
-	for _, f := range letters {
-		err := compiler.Compile(f)
+	for _, l := range letters {
+		err := compiler.Compile(l)
 
 		if err != nil {
 			fmt.Println(err)

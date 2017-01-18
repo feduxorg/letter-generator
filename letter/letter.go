@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type Letter struct {
@@ -25,6 +26,15 @@ func New(recipient recipients.Recipient) Letter {
 	letter.CreateTexFile()
 
 	return letter
+}
+
+func (l *Letter) GeneratePdfPath() {
+	escaped_string := strings.ToLower(r.Name)
+	//old_filename := "index.tex"
+	re := regexp.MustCompile("[[:blank:]]")
+	escaped_string = re.ReplaceAllLiteralString(escaped_string, "-")
+	re = regexp.MustCompile("[^a-z0-9]")
+	escaped_string = re.ReplaceAllLiteralString(escaped_string, "")
 }
 
 func (l *Letter) CreateTexFile() {

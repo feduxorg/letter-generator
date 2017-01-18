@@ -7,7 +7,3 @@ type Recipient struct {
 	City           string   `json:"city"`
 	AdditionalInfo []string `json:"additional_info"`
 }
-
-type RecipientManager struct {
-	Recipients []Recipient
-}

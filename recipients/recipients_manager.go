@@ -7,6 +7,10 @@ import (
 	"os"
 )
 
+type RecipientManager struct {
+	Recipients []Recipient
+}
+
 func (m *RecipientManager) Read() *RecipientManager {
 	data, err := ioutil.ReadFile("config/to.json")
 
