@@ -41,31 +41,31 @@ pdfauthor={ {{- .Sender.Name -}} },
 \setkomavar{fromaddress}{ {{- .Sender.Street }}\\{{ .Sender.City -}} }
 
 %%%%%%%%%%%%% Betreff %%%%%%%%%%%%%%%%
-{{- $length := len .Metadata.Subject }}{{ if gt $length 0 }}
-\setkomavar{subject}{ {{- .Metadata.Subject -}} }
+{{- $length := len .Subject }}{{ if gt $length 0 }}
+\setkomavar{subject}{ {{- .Subject -}} }
 {{- end }}
 
 %%%%%%%%%%%%% Unterschrift %%%%%%%%%%%%%%%%
-{{- $length := len .Metadata.Signature}}{{ if gt $length 0 }}
-\setkomavar{signature}{ {{- .Metadata.Signature -}} }
+{{- $length := len .Signature}}{{ if gt $length 0 }}
+\setkomavar{signature}{ {{- .Signature -}} }
 {{- end }}
 
 %\LoadLetterOption{DIN}
 
-{{- $length := len .Metadata.Opening }}{{ if gt $length 0 }}
-\opening{ {{- .Metadata.Opening -}} }
+{{- $length := len .Opening }}{{ if gt $length 0 }}
+\opening{ {{- .Opening -}} }
 {{- end }}
 
 TEXT
 
-\closing{ {{- .Metadata.Closing -}} }
+\closing{ {{- .Closing -}} }
 %%%%%%%%%%%%% Postscriptum %%%%%%%%%%%%%%%
-{{- if eq .Metadata.HasPs true }}
+{{- if eq .HasPs true }}
 \ps PS: 
 {{ end }}
 
 %%%%%%%%%%%%% Anhänge %%%%%%%%%%%%%%%
-{{- if eq .Metadata.HasAttachments true }}
+{{- if eq .HasAttachments true }}
 \encl{}
 {{ end -}}
 

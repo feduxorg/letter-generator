@@ -2,47 +2,65 @@ package converter
 
 import (
 	_ "fmt"
-	"github.com/maxmeyer/letter-generator-go/metadata"
-	"github.com/maxmeyer/letter-generator-go/recipients"
-	"github.com/maxmeyer/letter-generator-go/sender"
-	"io"
-	_ "os"
+	"github.com/maxmeyer/letter-generator-go/letter"
+	"os"
 	gotmpl "text/template"
 )
 
 type TemplateConverter struct{}
 
-type Context struct {
-	Metadata  *metadata.Metadata
-	Recipient *recipients.Recipient
-	Sender    *sender.Sender
+func NewConverter() TemplateConverter {
+	return TemplateConverter{}
 }
 
 func (c *TemplateConverter) Transform(
-	metadata *metadata.Metadata,
-	recipient *recipients.Recipient,
-	sender *sender.Sender,
+	letter letter.Letter,
 	template Template,
-	output_file io.Writer,
-) {
+) (TexFile, error) {
 
 	tmpl, err := gotmpl.New("letter_template").Parse(template.Content)
 
 	if err != nil {
-		panic(err)
+		return TexFile{}, err
 	}
 
-	context := Context{
-		Metadata:  metadata,
-		Recipient: recipient,
-		Sender:    sender,
+	context := TemplateContext{
+		Recipient:      &letter.Recipient,
+		Sender:         &letter.Sender,
+		Subject:        letter.Subject,
+		Signature:      letter.Signature,
+		Opening:        letter.Opening,
+		Closing:        letter.Closing,
+		HasAttachments: letter.HasAttachments,
+		HasPs:          letter.HasPs,
+	}
+
+	filename_generator := NewFilenameGenerator()
+	file_name, err := filename_generator.GenerateTex(context.Recipient.Name)
+
+	if err != nil {
+		return TexFile{}, err
+	}
+
+	tex_file, err := NewTexFile(file_name)
+
+	if err != nil {
+		return TexFile{}, err
+	}
+
+	output_file, err := os.Create(tex_file.Path)
+
+	if err != nil {
+		return TexFile{}, err
 	}
 
 	err = tmpl.Execute(output_file, context)
 
 	if err != nil {
-		panic(err)
+		return TexFile{}, err
 	}
+
+	return tex_file, nil
 
 	// fmt.Println(output_file)
 }

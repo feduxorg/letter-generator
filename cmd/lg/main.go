@@ -10,59 +10,57 @@ import (
 	"github.com/maxmeyer/letter-generator-go/sender"
 	_ "net/url"
 	"os"
-	"regexp"
-	"strings"
+	//"regexp"
+	//"strings"
 )
 
 func main() {
 	metadata := metadata.Metadata{}
 	metadata.Read()
 
-	recipient_manager := recipients.RecipientManager{}
-	recipient_manager.Read()
-
 	sender := sender.Sender{}
 	sender.Read()
 
-	template := converter.Template{}
-	template.Read()
-
-	template_converter := converter.TemplateConverter{}
-	compiler := latex.Compiler{}
+	recipient_manager := recipients.RecipientManager{}
+	recipient_manager.Read()
 
 	var letters []letter.Letter
 
 	for _, r := range recipient_manager.Recipients {
-		lt := letter.New(r)
+		lt := letter.New(sender, r, metadata)
 		letters = append(letters, lt)
-
-		fmt.Println(escaped_string)
-
-		os.Exit(1)
-
-		//new_filename := fmt.Sprintf("%s.pdf", url.QueryEscape())
-		//escaped_string = strings.Replace(lt.TexPath, old_filename, new_filename, -1)
-
-		fmt.Println(lt.PdfPath)
-
-		//lt.PdfPath = pdf_path_converter.Convert(lt.TexPath)
-
-		template_converter.Transform(
-			&metadata,
-			&r,
-			&sender,
-			template,
-			lt.TexFile,
-		)
 	}
 
+	template := converter.Template{}
+	template.Read()
+
+	template_converter := converter.NewConverter()
+
+	var tex_files []converter.TexFile
+
 	for _, l := range letters {
-		err := compiler.Compile(l)
+		tex_file, err := template_converter.Transform(l, template)
 
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 
+		tex_files = append(tex_files, tex_file)
+	}
+
+	compiler := latex.NewCompiler()
+
+	for _, f := range tex_files {
+		fmt.Println(fmt.Sprintf("Compiling tex file \"%s\".", f.Path))
+
+		pdf_file, err := compiler.Compile(f.Path)
+
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		fmt.Println(fmt.Sprintf("Generatd pdf file \"%s\".", pdf_file))
 	}
 }
