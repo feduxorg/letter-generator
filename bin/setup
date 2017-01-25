@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Install package manager
+go get github.com/Masterminds/glide
+
+# Install packages
+glide install
