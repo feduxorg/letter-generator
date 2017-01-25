@@ -18,18 +18,22 @@ func NewCompiler() Compiler {
 	return Compiler{}
 }
 
-func (c *Compiler) Compile(tex_file string) (string, error) {
+func (c *Compiler) Compile(tex_file converter.TexFile) (converter.PdfFile, error) {
 	filename_generator := converter.NewFilenameGenerator()
-	pdf_file, err := filename_generator.GeneratePdf(tex_file)
+
+	path, err := filename_generator.GeneratePdf(tex_file.Path)
 
 	if err != nil {
-		return "", err
+		return converter.PdfFile{}, err
 	}
 
-	c.CmdString = "pdflatex " + " -halt-on-error " + " " + tex_file + " " + pdf_file
-	c.WorkingDirectory = filepath.Dir(tex_file)
+	pdf_file := converter.PdfFile{}
+	pdf_file.Path = path
 
-	cmd := exec.Command("pdflatex", "-halt-on-error", tex_file, pdf_file)
+	c.CmdString = "pdflatex " + " -halt-on-error " + " " + tex_file.Path + " " + pdf_file.Path
+	c.WorkingDirectory = filepath.Dir(tex_file.Path)
+
+	cmd := exec.Command("pdflatex", "-halt-on-error", tex_file.Path, pdf_file.Path)
 	cmd.Dir = c.WorkingDirectory
 	output, err := cmd.Output()
 
@@ -47,7 +51,7 @@ func (c *Compiler) Compile(tex_file string) (string, error) {
 			msg = msg + "\n" + m
 		}
 
-		return "", errors.New(msg)
+		return converter.PdfFile{}, errors.New(msg)
 	}
 
 	return pdf_file, nil
