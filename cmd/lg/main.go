@@ -11,11 +11,16 @@ import (
 	"github.com/maxmeyer/letter-generator-go/sender"
 	log "github.com/sirupsen/logrus"
 	"log"
+	"gopkg.in/alecthomas/kingpin.v2"
 	_ "net/url"
 	"os"
 	"path/filepath"
 	//"regexp"
 	//"strings"
+)
+
+var (
+	verbose = kingpin.Flag("verbose", "Verbose mode.").Short('v').Bool()
 )
 
 func init() {
@@ -30,6 +35,14 @@ func init() {
 }
 
 func main() {
+	kingpin.Parse()
+
+	if *verbose == true {
+		log.SetLevel(log.DebugLevel)
+	} else {
+		log.SetLevel(log.InfoLevel)
+	}
+
 	metadata := metadata.Metadata{}
 	metadata.Read()
 
