@@ -1,24 +1,21 @@
 package converter
 
 import (
-	"fmt"
 	"io/ioutil"
-	"os"
 )
 
 type Template struct {
 	Content string
 }
 
-func (t *Template) Read() *Template {
+func (t *Template) Read() error {
 	data, err := ioutil.ReadFile("templates/letter.tex.tt")
 
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		return err
 	}
 
 	t.Content = string(data)
 
-	return t
+	return nil
 }

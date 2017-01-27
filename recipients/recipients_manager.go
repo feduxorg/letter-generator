@@ -2,32 +2,28 @@ package recipients
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"os"
 )
 
 type RecipientManager struct {
 	Recipients []Recipient
 }
 
-func (m *RecipientManager) Read() *RecipientManager {
+func (m *RecipientManager) Read() error {
 	data, err := ioutil.ReadFile("config/to.json")
 
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		return err
 	}
 
 	var recipients []Recipient
 	err = json.Unmarshal(data, &recipients)
 
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		return err
 	}
 
 	m.Recipients = recipients
 
-	return m
+	return nil
 }
