@@ -76,7 +76,7 @@ func main() {
 	log.WithFields(log.Fields{
 		"valid":  len(recipient_manager.Recipients),
 		"status": "success",
-	}).Info("Read recipients")
+	}).Info("Reading recipients")
 
 	var letters []letter.Letter
 
@@ -178,13 +178,13 @@ func main() {
 				"status":      "failure",
 				"source":      f.Path,
 				"destination": new_path,
-			}).Fatal("Moving generatd pdf file")
+			}).Fatal("Moving generaed pdf file")
 
 			os.Exit(1)
 		}
 
 		log.WithFields(log.Fields{
-			"output_file": f.Path,
+			"output_file": new_path,
 			"status":      "success",
 		}).Info("Creating letter")
 
