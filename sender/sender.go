@@ -13,8 +13,8 @@ type Sender struct {
 	Mail   string `json:"Mail"`
 }
 
-func (s *Sender) Read() error {
-	data, err := ioutil.ReadFile("config/from.json")
+func (s *Sender) Read(path string) error {
+	data, err := ioutil.ReadFile(path)
 
 	if err != nil {
 		return err

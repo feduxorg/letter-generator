@@ -8,8 +8,8 @@ type Template struct {
 	Content string
 }
 
-func (t *Template) Read() error {
-	data, err := ioutil.ReadFile("templates/letter.tex.tt")
+func (t *Template) Read(path string) error {
+	data, err := ioutil.ReadFile(path)
 
 	if err != nil {
 		return err

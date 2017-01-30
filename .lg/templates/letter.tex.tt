@@ -46,8 +46,8 @@ pdfauthor={ {{- .Sender.Name -}} },
 {{- end }}
 
 %%%%%%%%%%%%% Unterschrift %%%%%%%%%%%%%%%%
-{{- $length := len .Signature}}{{ if gt $length 0 }}
-\setkomavar{signature}{ {{- .Signature -}} }
+{{- $length := len .Sender.Name}}{{ if gt $length 0 }}
+\setkomavar{signature}{ {{- .Sender.Name -}} }
 {{- end }}
 
 %\LoadLetterOption{DIN}

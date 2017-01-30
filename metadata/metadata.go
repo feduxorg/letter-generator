@@ -14,8 +14,8 @@ type Metadata struct {
 	HasPs          bool   `json:"has_ps"`
 }
 
-func (m *Metadata) Read() error {
-	data, err := ioutil.ReadFile("config/metadata.json")
+func (m *Metadata) Read(path string) error {
+	data, err := ioutil.ReadFile(path)
 
 	if err != nil {
 		return err

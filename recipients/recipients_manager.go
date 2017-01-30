@@ -9,8 +9,8 @@ type RecipientManager struct {
 	Recipients []Recipient
 }
 
-func (m *RecipientManager) Read() error {
-	data, err := ioutil.ReadFile("config/to.json")
+func (m *RecipientManager) Read(path string) error {
+	data, err := ioutil.ReadFile(path)
 
 	if err != nil {
 		return err
