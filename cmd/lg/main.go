@@ -17,8 +17,6 @@ func init() {
 }
 
 func main() {
-	builder := commandline.LetterBuilder{}
-
 	current_directory, err := os.Getwd()
 
 	if err != nil {
@@ -38,23 +36,16 @@ func main() {
 	}).Debug("Getting current directory")
 
 	config := letter_generator.Config{}
-	config.RecipientsFile = filepath.Join(current_directory, config_directory, "source/to.json")
-	config.MetadataFile = filepath.Join(current_directory, config_directory, "source/metadata.json")
-	config.SenderFile = filepath.Join(current_directory, config_directory, "source/from.json")
+	config.RemoteSources = []string{"git@gitlab.com:maxmeyer/letter-template.git"}
+	config.RecipientsFile = filepath.Join(current_directory, config_directory, "data/to.json")
+	config.MetadataFile = filepath.Join(current_directory, config_directory, "data/metadata.json")
+	config.SenderFile = filepath.Join(current_directory, config_directory, "data/from.json")
 	config.TemplateFile = filepath.Join(current_directory, config_directory, "templates/letter.tex.tt")
 
-	if *verbose == true {
-		log.SetLevel(log.DebugLevel)
-	} else {
-		log.SetLevel(log.InfoLevel)
-	}
+	cli := commandline.Cli{}
+	err = cli.Run(os.Args, config, current_directory)
 
-	switch kingpin.Parse() {
-	case "build":
-		builder.Build(config)
-	case "init":
-	default:
-		builder.Build(config)
+	if err != nil {
+		os.Exit(1)
 	}
-
 }
