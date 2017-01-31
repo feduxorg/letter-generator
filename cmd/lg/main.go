@@ -4,15 +4,8 @@ import (
 	"github.com/maxmeyer/letter-generator-go/commandline"
 	"github.com/maxmeyer/letter-generator-go/letter_generator"
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/alecthomas/kingpin.v2"
 	"os"
 	"path/filepath"
-)
-
-var (
-	verbose      = kingpin.Flag("verbose", "Verbose mode.").Short('v').Bool()
-	buildCommand = kingpin.Command("build", "Build letters")
-	initCommand  = kingpin.Command("init", "Initialize project directory to build letters")
 )
 
 func init() {

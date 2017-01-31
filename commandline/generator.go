@@ -17,7 +17,7 @@ import (
 
 type LetterBuilder struct{}
 
-func (lc *LetterBuilder) Build(config letter_generator.Config) {
+func (lc *LetterBuilder) Build(config letter_generator.Config) error {
 	metadata := metadata.Metadata{}
 	err := metadata.Read(config.MetadataFile)
 
@@ -27,7 +27,7 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) {
 			"status": "failure",
 		}).Fatal("Reading letter metadata")
 
-		os.Exit(1)
+		return err
 	}
 
 	log.WithFields(log.Fields{
@@ -43,7 +43,7 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) {
 			"status": "failure",
 		}).Fatal("Reading sender")
 
-		os.Exit(1)
+		return err
 	}
 
 	log.WithFields(log.Fields{
@@ -78,7 +78,7 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) {
 			"status": "failure",
 		}).Fatal("Reading letter template")
 
-		os.Exit(1)
+		return err
 	}
 
 	log.WithFields(log.Fields{
@@ -98,7 +98,7 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) {
 				"status": "failure",
 			}).Fatal("Create tex files")
 
-			os.Exit(1)
+			return err
 		}
 
 		log.WithFields(log.Fields{
@@ -121,7 +121,7 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) {
 				"status": "failure",
 			}).Fatal("Compiling tex files")
 
-			os.Exit(1)
+			return err
 		}
 
 		log.WithFields(log.Fields{
@@ -142,7 +142,8 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) {
 			"path":   output_directory,
 			"status": "failure",
 		}).Fatal("Generating output directory")
-		os.Exit(1)
+
+		return err
 	}
 
 	for _, f := range pdf_files {
@@ -160,7 +161,7 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) {
 				"destination": new_path,
 			}).Fatal("Moving generaed pdf file")
 
-			os.Exit(1)
+			return err
 		}
 
 		log.WithFields(log.Fields{
@@ -170,4 +171,6 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) {
 
 		f.Path = new_path
 	}
+
+	return nil
 }
