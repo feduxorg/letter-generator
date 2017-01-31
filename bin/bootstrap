@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Install package manager
+go get github.com/Masterminds/glide
+
+# Install packages
+glide install
+
+# Setup git2go statically
+# http://www.petethompson.net/blog/golang/2015/10/04/getting-going-with-git2go/
+cd $GOPATH/src/github.com/libgit2/git2go
+git checkout next
+git submodule update --init
+make install
