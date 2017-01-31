@@ -1,8 +1,12 @@
-hash: 51f6d029b299f69bcb29603d5a916ca2bc1411969fb015375dba80aa9d35c12f
-updated: 2017-01-25T08:16:44.628343334+01:00
+hash: 75f129352c98a44234d7cddc63081cacfb666f492dc5870087b3a47a4965e8e8
+updated: 2017-01-31T22:54:16.15321273+01:00
 imports:
+- name: github.com/libgit2/git2go
+  version: 4a14260153072e1e0d8e32d9270b30e3acca7c80
 - name: github.com/sirupsen/logrus
   version: d26492970760ca5d33129d2d799e34be5c4782eb
+- name: github.com/urfave/cli
+  version: 0bdeddeeb0f650497d603c4ad7b20cfe685682f6
 - name: golang.org/x/sys
   version: d75a52659825e75fff6158388dddc6a5b04f9ba5
   subpackages:
