@@ -51,7 +51,7 @@ func main() {
 	}).Debug("Getting home directory of current user")
 
 	config := letter_generator.Config{}
-	config.RemoteSources = []string{filepath.Join(home_directory, ".local/share/letter-template/config.git"), "git@gitlab.com:maxmeyer/letter-template.git"}
+	config.RemoteSources = []string{filepath.Join(home_directory, ".local/share/letter-template/.git"), "git@gitlab.com:maxmeyer/letter-template.git"}
 	config.ConfigDirectory = ".lg"
 	config.RecipientsFile = filepath.Join(current_directory, config.ConfigDirectory, "data/to.json")
 	config.MetadataFile = filepath.Join(current_directory, config.ConfigDirectory, "data/metadata.json")
