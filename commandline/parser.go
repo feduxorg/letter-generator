@@ -40,17 +40,7 @@ func (p *Cli) Run(args []string, config letter_generator.Config, current_directo
 	}
 
 	app.Action = func(c *cli.Context) error {
-		if c.Bool("verbose") == true {
-			log.SetLevel(log.DebugLevel)
-		} else {
-			log.SetLevel(log.InfoLevel)
-		}
-
-		if c.Bool("show-config") == true {
-			fmt.Print(strings.Join(config.ToString(), "\n"))
-			fmt.Print("\n")
-			os.Exit(0)
-		}
+		parse_global_options(c, config)
 
 		err := build(config)
 
@@ -66,7 +56,15 @@ func (p *Cli) Run(args []string, config letter_generator.Config, current_directo
 			Name:    "init",
 			Aliases: []string{"i"},
 			Usage:   "initialize current directory",
+			Flags: []cli.Flag{
+				cli.BoolFlag{
+					Name:  "verbose, V",
+					Usage: "activate verbose logging",
+				},
+			},
 			Action: func(c *cli.Context) error {
+				parse_global_options(c, config)
+
 				err := initialize(current_directory, config)
 
 				if err != nil {
@@ -80,7 +78,15 @@ func (p *Cli) Run(args []string, config letter_generator.Config, current_directo
 			Name:    "build",
 			Aliases: []string{"b"},
 			Usage:   "build letters based on information in current directory",
+			Flags: []cli.Flag{
+				cli.BoolFlag{
+					Name:  "verbose, V",
+					Usage: "activate verbose logging",
+				},
+			},
 			Action: func(c *cli.Context) error {
+				parse_global_options(c, config)
+
 				err := build(config)
 
 				if err != nil {
@@ -117,4 +123,23 @@ func initialize(dir string, config letter_generator.Config) error {
 	}
 
 	return nil
+}
+
+func parse_global_options(c *cli.Context, config letter_generator.Config) {
+	if c.Bool("verbose") == true {
+		log.SetLevel(log.DebugLevel)
+	} else {
+		log.SetLevel(log.InfoLevel)
+	}
+
+	log.WithFields(log.Fields{
+		"verbose":     c.Bool("verbose"),
+		"show-config": c.Bool("show-config"),
+	}).Info("Parsing commandline options")
+
+	if c.Bool("show-config") == true {
+		fmt.Print(strings.Join(config.ToString(), "\n"))
+		fmt.Print("\n")
+		os.Exit(0)
+	}
 }
