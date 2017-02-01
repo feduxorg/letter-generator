@@ -14,7 +14,7 @@ func NewFilenameGenerator() FilenameGenerator {
 
 func (g *FilenameGenerator) GeneratePdf(input string) (string, error) {
 	if input == "" {
-		return "", errors.New("Empty input")
+		return "", errors.New("Empty input is not allowed to generate file name for PDF file")
 	}
 
 	re := regexp.MustCompile("\\.tex")
@@ -25,7 +25,7 @@ func (g *FilenameGenerator) GeneratePdf(input string) (string, error) {
 
 func (g *FilenameGenerator) GenerateTex(input string) (string, error) {
 	if input == "" {
-		return "", errors.New("Empty input")
+		return "", errors.New("Empty input is not allowed to generate file name for tex file")
 	}
 
 	escaped_string := strings.ToLower(input)
