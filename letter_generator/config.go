@@ -6,11 +6,12 @@ import (
 )
 
 type Config struct {
-	RemoteSources  []string `json:remote_sources`
-	RecipientsFile string   `json:recipients_file`
-	MetadataFile   string   `json:metadata_file`
-	SenderFile     string   `json:sender_file`
-	TemplateFile   string   `json:template_file`
+	ConfigDirectory string   `json:config_directory`
+	RemoteSources   []string `json:remote_sources`
+	RecipientsFile  string   `json:recipients_file`
+	MetadataFile    string   `json:metadata_file`
+	SenderFile      string   `json:sender_file`
+	TemplateFile    string   `json:template_file`
 }
 
 func (c *Config) ToString() []string {
