@@ -67,6 +67,7 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) error {
 
 	log.WithFields(log.Fields{
 		"status": "success",
+		"count":  len(letters),
 	}).Debug("Creating letter instances")
 
 	template := converter.Template{}
