@@ -5,16 +5,19 @@ import (
 	"github.com/libgit2/git2go"
 	"github.com/maxmeyer/letter-generator-go/letter_generator"
 	log "github.com/sirupsen/logrus"
+	_ "path/filepath"
 	"strings"
 )
 
 type Initializer struct{}
 
 func (i *Initializer) Init(dir string, config letter_generator.Config) error {
+	//dir = filepath.Join(dir, config.ConfigDirectory)
+
 	log.WithFields(log.Fields{
-		"sources":     strings.Join(config.RemoteSources, ", "),
-		"destination": dir,
-	}).Debug("Cloning config repository")
+		"known_sources": strings.Join(config.RemoteSources, ", "),
+		"destination":   dir,
+	}).Debug("Starting to clone config repository")
 
 	var remote_source_cloned bool
 	remote_source_cloned = false
@@ -24,15 +27,17 @@ func (i *Initializer) Init(dir string, config letter_generator.Config) error {
 			break
 		}
 
-		repo, err := git.Clone(s, dir, &git.CloneOptions{})
+		_, err := git.Clone(s, dir, &git.CloneOptions{})
 
 		if err != nil {
 			log.WithFields(log.Fields{
 				"source":      s,
 				"destination": dir,
-				"result":      repo,
+				"msg":         err.Error(),
 				"status":      "failure",
 			}).Debug("Cloning config repository")
+
+			continue
 		}
 
 		remote_source_cloned = true
