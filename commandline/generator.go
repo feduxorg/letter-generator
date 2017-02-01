@@ -97,7 +97,7 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) error {
 			log.WithFields(log.Fields{
 				"msg":    err.Error(),
 				"status": "failure",
-			}).Fatal("Create tex files")
+			}).Fatal("Creating tex file from template")
 
 			return err
 		}
