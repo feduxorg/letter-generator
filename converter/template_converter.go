@@ -1,7 +1,6 @@
 package converter
 
 import (
-	_ "fmt"
 	"github.com/maxmeyer/letter-generator-go/letter"
 	"os"
 	gotmpl "text/template"
