@@ -27,7 +27,7 @@ func (i *Initializer) Init(dir string, config letter_generator.Config) error {
 			break
 		}
 
-		_, err := git.Clone(s, dir, &git.CloneOptions{})
+		repo, err := git.Clone(s, dir, &git.CloneOptions{})
 
 		if err != nil {
 			log.WithFields(log.Fields{
@@ -38,6 +38,18 @@ func (i *Initializer) Init(dir string, config letter_generator.Config) error {
 			}).Debug("Cloning config repository")
 
 			continue
+		}
+
+		remote := "origin"
+		repo.Remotes.Delete(remote)
+
+		if err != nil {
+			log.WithFields(log.Fields{
+				"repository": repo,
+				"remote":     remote,
+				"msg":        err.Error(),
+				"status":     "failure",
+			}).Warn("Removing remote failed")
 		}
 
 		remote_source_cloned = true
