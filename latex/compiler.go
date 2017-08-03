@@ -3,9 +3,10 @@ package latex
 import (
 	"errors"
 	"fmt"
-	"github.com/maxmeyer/letter-generator-go/converter"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/fedux-org/letter-generator-go/converter"
 )
 
 type Compiler struct {

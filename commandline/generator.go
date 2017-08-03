@@ -1,18 +1,19 @@
 package commandline
 
 import (
-	"github.com/maxmeyer/letter-generator-go/converter"
-	"github.com/maxmeyer/letter-generator-go/latex"
-	"github.com/maxmeyer/letter-generator-go/letter"
-	"github.com/maxmeyer/letter-generator-go/letter_generator"
-	"github.com/maxmeyer/letter-generator-go/metadata"
-	lgos "github.com/maxmeyer/letter-generator-go/os"
-	"github.com/maxmeyer/letter-generator-go/recipients"
-	"github.com/maxmeyer/letter-generator-go/sender"
-	log "github.com/sirupsen/logrus"
 	_ "net/url"
 	"os"
 	"path/filepath"
+
+	"github.com/fedux-org/letter-generator-go/converter"
+	"github.com/fedux-org/letter-generator-go/latex"
+	"github.com/fedux-org/letter-generator-go/letter"
+	"github.com/fedux-org/letter-generator-go/letter_generator"
+	"github.com/fedux-org/letter-generator-go/metadata"
+	lgos "github.com/fedux-org/letter-generator-go/os"
+	"github.com/fedux-org/letter-generator-go/recipients"
+	"github.com/fedux-org/letter-generator-go/sender"
+	log "github.com/sirupsen/logrus"
 )
 
 type LetterBuilder struct{}

@@ -2,11 +2,12 @@ package commandline
 
 import (
 	"errors"
-	"github.com/libgit2/git2go"
-	"github.com/maxmeyer/letter-generator-go/letter_generator"
-	log "github.com/sirupsen/logrus"
 	_ "path/filepath"
 	"strings"
+
+	"github.com/fedux-org/letter-generator-go/letter_generator"
+	"github.com/libgit2/git2go"
+	log "github.com/sirupsen/logrus"
 )
 
 type Initializer struct{}

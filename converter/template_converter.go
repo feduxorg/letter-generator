@@ -1,9 +1,10 @@
 package converter
 
 import (
-	"github.com/maxmeyer/letter-generator-go/letter"
 	"os"
 	gotmpl "text/template"
+
+	"github.com/fedux-org/letter-generator-go/letter"
 )
 
 type TemplateConverter struct{}

@@ -8,7 +8,7 @@ This small tool helps you to generate form letters.
 ### Install
 
 ~~~bash
-go get github.com/maxmeyer/letter-generator-go
+go get github.com/fedux-org/letter-generator-go
 ~~~
 
 ### Initialize

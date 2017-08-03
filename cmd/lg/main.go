@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/maxmeyer/letter-generator-go/commandline"
 	"os"
+
+	"github.com/fedux-org/letter-generator-go/commandline"
 )
 
 func init() {

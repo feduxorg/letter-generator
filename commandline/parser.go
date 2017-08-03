@@ -1,12 +1,13 @@
 package commandline
 
 import (
-	"github.com/maxmeyer/letter-generator-go/letter_generator"
-	lgos "github.com/maxmeyer/letter-generator-go/os"
-	log "github.com/sirupsen/logrus"
-	"github.com/urfave/cli"
 	"os"
 	"path/filepath"
+
+	"github.com/fedux-org/letter-generator-go/letter_generator"
+	lgos "github.com/fedux-org/letter-generator-go/os"
+	log "github.com/sirupsen/logrus"
+	"github.com/urfave/cli"
 )
 
 type Cli struct{}
@@ -202,7 +203,7 @@ func build_config(working_directory string) letter_generator.Config {
 	}).Debug("Getting home directory of current user")
 
 	config := letter_generator.Config{}
-	config.RemoteSources = []string{filepath.Join(home_directory, ".local/share/letter-template/.git"), "git@gitlab.com:maxmeyer/letter-template.git"}
+	config.RemoteSources = []string{filepath.Join(home_directory, ".local/share/letter-template/.git"), "git@gitlab.com:fedux-org/letter-template.git"}
 	config.ConfigDirectory = ".lg"
 	config.RecipientsFile = filepath.Join(working_directory, config.ConfigDirectory, "data/to.json")
 	config.MetadataFile = filepath.Join(working_directory, config.ConfigDirectory, "data/metadata.json")

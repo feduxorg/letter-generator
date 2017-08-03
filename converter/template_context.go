@@ -1,8 +1,8 @@
 package converter
 
 import (
-	"github.com/maxmeyer/letter-generator-go/recipients"
-	"github.com/maxmeyer/letter-generator-go/sender"
+	"github.com/fedux-org/letter-generator-go/recipients"
+	"github.com/fedux-org/letter-generator-go/sender"
 )
 
 type TemplateContext struct {
