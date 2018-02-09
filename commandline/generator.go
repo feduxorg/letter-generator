@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/fedux-org/letter-generator-go/assets"
 	"github.com/fedux-org/letter-generator-go/converter"
 	"github.com/fedux-org/letter-generator-go/latex"
 	"github.com/fedux-org/letter-generator-go/letter"
@@ -88,6 +89,9 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) error {
 	}).Debug("Reading letter template")
 
 	template_converter := converter.NewConverter()
+
+	assetRepo := assets.NewRepository(config.AssetsDirectory)
+	assetRepo.Init()
 
 	var tex_files []converter.TexFile
 
