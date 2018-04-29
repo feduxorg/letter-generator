@@ -2,15 +2,16 @@
 
 
 [[projects]]
+  branch = "master"
   name = "github.com/libgit2/git2go"
   packages = ["."]
-  revision = "4a14260153072e1e0d8e32d9270b30e3acca7c80"
+  revision = "1381380f3450f91b66c7951ad0e40c31acb784a1"
 
 [[projects]]
   name = "github.com/sirupsen/logrus"
   packages = ["."]
-  revision = "d26492970760ca5d33129d2d799e34be5c4782eb"
-  version = "v0.11.0"
+  revision = "ba1b36c82c5e05c4f912a88eab0dcd91a171688f"
+  version = "v0.11.5"
 
 [[projects]]
   name = "github.com/urfave/cli"
@@ -19,9 +20,10 @@
   version = "v1.19.1"
 
 [[projects]]
+  branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "d75a52659825e75fff6158388dddc6a5b04f9ba5"
+  revision = "cbbc999da32df943dac6cd71eb3ee39e1d7838b9"
 
 [solve-meta]
   analyzer-name = "dep"
