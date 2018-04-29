@@ -12,6 +12,7 @@ type Config struct {
 	MetadataFile    string   `json:metadata_file`
 	SenderFile      string   `json:sender_file`
 	TemplateFile    string   `json:template_file`
+	AssetsDirectory string   `json:assets_directory`
 }
 
 func (c *Config) ToString() []string {
@@ -22,6 +23,7 @@ func (c *Config) ToString() []string {
 	result = append(result, fmt.Sprintf("%20s | %-30s", "Metadata File", c.MetadataFile))
 	result = append(result, fmt.Sprintf("%20s | %-30s", "Sender File", c.SenderFile))
 	result = append(result, fmt.Sprintf("%20s | %-30s", "Template File", c.TemplateFile))
+	result = append(result, fmt.Sprintf("%20s | %-30s", "Assets Directory", c.AssetsDirectory))
 
 	return result
 }

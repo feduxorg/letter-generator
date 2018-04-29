@@ -203,12 +203,13 @@ func build_config(working_directory string) letter_generator.Config {
 	}).Debug("Getting home directory of current user")
 
 	config := letter_generator.Config{}
-	config.RemoteSources = []string{filepath.Join(home_directory, ".local/share/letter-template/.git"), "git@gitlab.com:fedux-org/letter-template.git"}
+	config.RemoteSources = []string{filepath.Join(home_directory, ".local/share/letter-template/.git"), "git@gitlab.com:maxmeyer/letter-template.git"}
 	config.ConfigDirectory = ".lg"
 	config.RecipientsFile = filepath.Join(working_directory, config.ConfigDirectory, "data/to.json")
 	config.MetadataFile = filepath.Join(working_directory, config.ConfigDirectory, "data/metadata.json")
 	config.SenderFile = filepath.Join(working_directory, config.ConfigDirectory, "data/from.json")
 	config.TemplateFile = filepath.Join(working_directory, config.ConfigDirectory, "templates/letter.tex.tt")
+	config.AssetsDirectory = filepath.Join(working_directory, config.ConfigDirectory, "assets")
 
 	return config
 }
