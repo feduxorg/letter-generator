@@ -4,3 +4,4 @@ build/
 letters/
 vendor/
 tmp/
+Gopkg.lock
