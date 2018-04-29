@@ -1,6 +1,7 @@
 package commandline
 
 import (
+	"github.com/pkg/errors"
 	_ "net/url"
 	"os"
 	"path/filepath"
@@ -91,7 +92,15 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) error {
 	template_converter := converter.NewConverter()
 
 	assetRepo := assets.NewRepository(config.AssetsDirectory)
-	assetRepo.Init()
+
+	if err := assetRepo.Init(); err != nil {
+		return errors.Wrap(err, "init repo")
+	}
+
+	log.WithFields(log.Fields{
+		"status":      "success",
+		"len(assets)": len(assetRepo.KnownAssets()),
+	}).Debug("Initializing repository for assets")
 
 	var tex_files []converter.TexFile
 
