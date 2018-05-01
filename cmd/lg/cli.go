@@ -1,4 +1,4 @@
-package commandline
+package main
 
 import (
 	"os"
@@ -6,6 +6,7 @@ import (
 
 	"github.com/fedux-org/letter-generator-go/letter_generator"
 	lgos "github.com/fedux-org/letter-generator-go/os"
+	"github.com/fedux-org/letter-generator-go/pkg/api"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
@@ -13,7 +14,6 @@ import (
 type Cli struct{}
 
 func (p *Cli) Run(args []string) error {
-
 	appMetadata := letter_generator.AppMetadata{
 		Version: "0.0.1",
 		License: "MIT",
@@ -132,7 +132,7 @@ func (p *Cli) Run(args []string) error {
 }
 
 func build(config letter_generator.Config) error {
-	builder := LetterBuilder{}
+	builder := api.LetterBuilder{}
 	err := builder.Build(config)
 
 	if err != nil {
@@ -143,7 +143,7 @@ func build(config letter_generator.Config) error {
 }
 
 func initialize(dir string, config letter_generator.Config) error {
-	initializer := Initializer{}
+	initializer := api.Initializer{}
 	err := initializer.Init(dir, config)
 
 	if err != nil {

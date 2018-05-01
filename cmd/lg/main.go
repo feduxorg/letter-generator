@@ -2,8 +2,6 @@ package main
 
 import (
 	"os"
-
-	"github.com/fedux-org/letter-generator-go/commandline"
 )
 
 func init() {
@@ -15,7 +13,7 @@ func init() {
 }
 
 func main() {
-	cli := commandline.Cli{}
+	cli := Cli{}
 	err := cli.Run(os.Args)
 
 	if err != nil {

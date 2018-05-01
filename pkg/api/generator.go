@@ -1,4 +1,4 @@
-package commandline
+package api
 
 import (
 	"github.com/pkg/errors"
