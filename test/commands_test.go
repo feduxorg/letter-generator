@@ -6,7 +6,7 @@ import (
 
 	"os/exec"
 
-	"github.com/maxmeyer/doc-holiday/test"
+	"github.com/fedux-org/letter-generator-go/test"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
 )
