@@ -42,7 +42,6 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) error {
 	}
 
 	assetRepo := assets.NewRepository(config.AssetsDirectory)
-
 	if err := assetRepo.Init(); err != nil {
 		return errors.Wrap(err, "init repo")
 	}
@@ -54,69 +53,14 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) error {
 
 	letters := generateLetterInstances(sender, metadata, recipientManager.Recipients)
 	texFiles := generateTexFiles(template, letters)
+	pdfFiles := compileTexFilesIntoPdf(texFiles)
 
-	compiler := latex.NewCompiler()
-	var pdf_files []converter.PdfFile
-
-	for _, f := range texFiles {
-		pdf_file, err := compiler.Compile(f)
-
-		if err != nil {
-			log.WithFields(log.Fields{
-				"msg":    err.Error(),
-				"status": "failure",
-			}).Fatal("Compiling tex files")
-
-			return err
-		}
-
-		log.WithFields(log.Fields{
-			"input_file":  f.Path,
-			"output_file": pdf_file.Path,
-			"status":      "success",
-		}).Info("Compiling tex file")
-
-		pdf_files = append(pdf_files, pdf_file)
-	}
-
-	current_working_directory, err := os.Getwd()
-	output_directory := filepath.Join(current_working_directory, "letters")
-	err = os.MkdirAll(output_directory, 0755)
-
+	outputDirectory, err := createOutputDirectory()
 	if err != nil {
-		log.WithFields(log.Fields{
-			"path":   output_directory,
-			"status": "failure",
-		}).Fatal("Generating output directory")
-
 		return err
 	}
 
-	for _, f := range pdf_files {
-		filename := filepath.Base(f.Path)
-		new_path := filepath.Join(output_directory, filename)
-
-		err = lgos.Copy(f.Path, new_path)
-
-		if err != nil {
-
-			log.WithFields(log.Fields{
-				"msg":         err.Error(),
-				"status":      "failure",
-				"source":      f.Path,
-				"destination": new_path,
-			}).Fatal("Moving generaed pdf file")
-
-			return err
-		}
-
-		log.WithFields(log.Fields{
-			"output_file": new_path,
-			"status":      "success",
-		}).Info("Creating letter")
-
-		f.Path = new_path
-	}
+	moveFilesToDir(pdfFiles, outputDirectory)
 
 	return nil
 }
@@ -231,4 +175,67 @@ func generateTexFiles(template converter.Template, letters []letter.Letter) []co
 	}
 
 	return texFiles
+}
+
+func compileTexFilesIntoPdf(texFiles []converter.TexFile) []converter.PdfFile {
+	compiler := latex.NewCompiler()
+	var pdfFiles []converter.PdfFile
+
+	for _, f := range texFiles {
+		pdfFile, err := compiler.Compile(f)
+
+		if err != nil {
+			log.WithFields(log.Fields{
+				"input_file":  f.Path,
+				"output_file": pdfFile.Path,
+			}).Info("Compiling tex file")
+
+			continue
+		}
+
+		log.WithFields(log.Fields{
+			"input_file":  f.Path,
+			"output_file": pdfFile.Path,
+		}).Info("Compiling tex file")
+
+		pdfFiles = append(pdfFiles, pdfFile)
+	}
+
+	return pdfFiles
+}
+
+func createOutputDirectory() (string, error) {
+	cwd, err := os.Getwd()
+	dir := filepath.Join(cwd, "letters")
+	err = os.MkdirAll(dir, 0755)
+
+	if err != nil {
+		return "", errors.Wrap(err, "create output directory")
+	}
+
+	return cwd, nil
+}
+
+func moveFilesToDir(pdfFiles []converter.PdfFile, dir string) {
+	for _, f := range pdfFiles {
+		filename := filepath.Base(f.Path)
+		newPath := filepath.Join(dir, filename)
+
+		err := lgos.Copy(f.Path, newPath)
+
+		if err != nil {
+			log.WithFields(log.Fields{
+				"msg":         err.Error(),
+				"status":      "failure",
+				"source":      f.Path,
+				"destination": newPath,
+			}).Error("Moving generated pdf file")
+
+			continue
+		}
+
+		log.WithFields(log.Fields{
+			"output_file": newPath,
+		}).Info("Creating letter")
+	}
 }
