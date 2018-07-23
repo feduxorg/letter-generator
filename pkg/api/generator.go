@@ -23,48 +23,23 @@ type LetterBuilder struct{}
 func (lc *LetterBuilder) Build(config letter_generator.Config) error {
 	metadata, err := readMetadata(config.MetadataFile)
 	if err != nil {
-		return errors.Wrap(err, "read metadata file")
+		return err
 	}
 
 	sender, err := readSender(config.SenderFile)
 	if err != nil {
-		return errors.Wrap(err, "read sender")
+		return err
 	}
 
 	recipientManager, err := readRecipients(config.RecipientsFile)
 	if err != nil {
-		return errors.Wrap(err, "read recipients list")
-	}
-
-	var letters []letter.Letter
-
-	for _, r := range recipientManager.Recipients {
-		lt := letter.New(sender, r, metadata)
-		letters = append(letters, lt)
-	}
-
-	log.WithFields(log.Fields{
-		"status": "success",
-		"count":  len(letters),
-	}).Debug("Creating letter instances")
-
-	template := converter.Template{}
-	template.Read(config.TemplateFile)
-
-	if err != nil {
-		log.WithFields(log.Fields{
-			"msg":    err.Error(),
-			"status": "failure",
-		}).Fatal("Reading letter template")
-
 		return err
 	}
 
-	log.WithFields(log.Fields{
-		"status": "success",
-	}).Debug("Reading letter template")
-
-	template_converter := converter.NewConverter()
+	template, err := readLetterTemplate(config.TemplateFile)
+	if err != nil {
+		return err
+	}
 
 	assetRepo := assets.NewRepository(config.AssetsDirectory)
 
@@ -77,32 +52,13 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) error {
 		"len(assets)": len(assetRepo.KnownAssets()),
 	}).Debug("Initializing repository for assets")
 
-	var tex_files []converter.TexFile
-
-	for _, l := range letters {
-		tex_file, err := template_converter.Transform(l, template)
-
-		if err != nil {
-			log.WithFields(log.Fields{
-				"msg":    err.Error(),
-				"status": "failure",
-			}).Fatal("Creating tex file from template")
-
-			return err
-		}
-
-		log.WithFields(log.Fields{
-			"status": "success",
-			"path":   tex_file.Path,
-		}).Debug("Creating tex file from template")
-
-		tex_files = append(tex_files, tex_file)
-	}
+	letters := generateLetterInstances(sender, metadata, recipientManager.Recipients)
+	texFiles := generateTexFiles(template, letters)
 
 	compiler := latex.NewCompiler()
 	var pdf_files []converter.PdfFile
 
-	for _, f := range tex_files {
+	for _, f := range texFiles {
 		pdf_file, err := compiler.Compile(f)
 
 		if err != nil {
@@ -170,7 +126,7 @@ func readMetadata(srcFile string) (metadata.Metadata, error) {
 	err := m.Read(srcFile)
 
 	if err != nil {
-		return metadata.Metadata{}, err
+		return metadata.Metadata{}, errors.Wrap(err, "read metadata")
 	}
 
 	log.WithField("file", srcFile).Debug("Reading metadata")
@@ -183,7 +139,7 @@ func readSender(srcFile string) (sender.Sender, error) {
 	err := s.Read(srcFile)
 
 	if err != nil {
-		return sender.Sender{}, err
+		return sender.Sender{}, errors.Wrap(err, "read sender information")
 	}
 
 	log.WithField("file", srcFile).Debug("Reading sender")
@@ -196,7 +152,7 @@ func readRecipients(srcFile string) (recipients.RecipientManager, error) {
 
 	err := recipientManager.Read(srcFile)
 	if err != nil {
-		return recipients.RecipientManager{}, err
+		return recipients.RecipientManager{}, errors.Wrap(err, "read recipients files")
 	}
 
 	logInfo := log.WithFields(log.Fields{
@@ -207,4 +163,72 @@ func readRecipients(srcFile string) (recipients.RecipientManager, error) {
 	logInfo.WithField("file", srcFile).Debug("Reading recipients")
 
 	return recipientManager, nil
+}
+
+func generateLetterInstances(sender sender.Sender, metadata metadata.Metadata, recipients []recipients.Recipient) []letter.Letter {
+	var letters []letter.Letter
+
+	for _, r := range recipients {
+		lt := letter.New(sender, r, metadata)
+		letters = append(letters, lt)
+	}
+
+	log.WithFields(log.Fields{
+		"count(letters)": len(letters),
+	}).Debug("Creating letter instances")
+
+	return letters
+}
+
+func readLetterTemplate(srcFile string) (converter.Template, error) {
+	template := converter.Template{}
+
+	err := template.Read(srcFile)
+	if err != nil {
+		return converter.Template{}, errors.Wrap(err, "read template")
+	}
+
+	log.WithFields(log.Fields{
+		"file": srcFile,
+	}).Debug("Reading letter template")
+
+	return template, nil
+}
+
+func renderTemplate(l letter.Letter, t converter.Template) (converter.TexFile, error) {
+	templateConverter := converter.NewConverter()
+	texFile, err := templateConverter.Transform(l, t)
+
+	if err != nil {
+		return converter.TexFile{}, errors.Wrap(err, "render template into tex file")
+	}
+
+	log.WithFields(log.Fields{
+		"path(tex_file)": texFile.Path,
+		"path(template)": t.Path,
+	}).Debug("Creating tex file from template")
+
+	return texFile, nil
+
+}
+
+func generateTexFiles(template converter.Template, letters []letter.Letter) []converter.TexFile {
+	var texFiles []converter.TexFile
+
+	for _, l := range letters {
+		texFile, err := renderTemplate(l, template)
+
+		if err != nil {
+			log.WithError(err).WithFields(log.Fields{
+				"letter":         l,
+				"path(template)": template.Path,
+			}).Error("Render letter into template")
+
+			continue
+		}
+
+		texFiles = append(texFiles, texFile)
+	}
+
+	return texFiles
 }
