@@ -21,14 +21,13 @@ import (
 type LetterBuilder struct{}
 
 func (lc *LetterBuilder) Build(config letter_generator.Config) error {
-	metadata := metadata.Metadata{}
-	err := metadata.Read(config.MetadataFile)
+	metadata, err := readMetadata(config.MetadataFile)
 
 	if err != nil {
 		log.WithFields(log.Fields{
 			"msg":    err.Error(),
 			"status": "failure",
-		}).Fatal("Reading letter metadata")
+		}).Error("Reading letter metadata")
 
 		return err
 	}
@@ -37,24 +36,26 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) error {
 		"status": "success",
 	}).Debug("Reading metadata")
 
-	sender := sender.Sender{}
-	err = sender.Read(config.SenderFile)
+	sender, err := readSender(config.SenderFile)
 
 	if err != nil {
 		log.WithFields(log.Fields{
 			"msg":    err.Error(),
 			"status": "failure",
-		}).Fatal("Reading sender")
+		}).Error("Reading sender")
 
 		return err
 	}
 
-	log.WithFields(log.Fields{
-		"status": "success",
-	}).Debug("Reading sender")
+	log.WithField("file", config.SenderFile).Debug("Reading sender")
 
-	recipient_manager := recipients.RecipientManager{}
-	err = recipient_manager.Read(config.RecipientsFile)
+	recipient_manager, err := readRecipients(config.RecipientsFile)
+
+	if err != nil {
+		log.WithError(err).Error("Reading recipients list")
+
+		return err
+	}
 
 	log.WithFields(log.Fields{
 		"valid":  len(recipient_manager.Recipients),
@@ -188,4 +189,37 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) error {
 	}
 
 	return nil
+}
+
+func readMetadata(srcFile string) (metadata.Metadata, error) {
+	m := metadata.Metadata{}
+	err := m.Read(srcFile)
+
+	if err != nil {
+		return metadata.Metadata{}, err
+	}
+
+	return m, nil
+}
+
+func readSender(srcFile string) (sender.Sender, error) {
+	s := sender.Sender{}
+	err := s.Read(srcFile)
+
+	if err != nil {
+		return sender.Sender{}, err
+	}
+
+	return s, nil
+}
+
+func readRecipients(recipientsFile string) (recipients.RecipientManager, error) {
+	recipient_manager := recipients.RecipientManager{}
+
+	err := recipient_manager.Read(recipientsFile)
+	if err != nil {
+		return recipients.RecipientManager{}, err
+	}
+
+	return recipient_manager, nil
 }
