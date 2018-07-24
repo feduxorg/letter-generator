@@ -1,12 +1,12 @@
 package latex
 
 import (
-	"errors"
 	"fmt"
 	"os/exec"
 	"path/filepath"
 
 	"github.com/fedux-org/letter-generator-go/converter"
+	"github.com/pkg/errors"
 )
 
 type Compiler struct {
@@ -20,12 +20,12 @@ func NewCompiler() Compiler {
 }
 
 func (c *Compiler) Compile(texFile converter.TexFile) (converter.PdfFile, error) {
-	filename_generator := converter.NewFilenameGenerator()
+	filenameGenerator := converter.NewFilenameGenerator()
 
-	path, err := filename_generator.GeneratePdf(texFile.Path)
+	path, err := filenameGenerator.GeneratePdf(texFile.Path)
 
 	if err != nil {
-		return converter.PdfFile{}, err
+		return converter.PdfFile{}, errors.Wrap(err, "generate filename for pdf")
 	}
 
 	pdfFile := converter.PdfFile{}
