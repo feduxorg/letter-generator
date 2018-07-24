@@ -41,26 +41,32 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) error {
 		return err
 	}
 
-	assetRepo := assets.NewRepository(config.AssetsDirectory)
-	if err := assetRepo.Init(); err != nil {
-		return errors.Wrap(err, "init repo")
-	}
-
-	log.WithFields(log.Fields{
-		"status":      "success",
-		"len(assets)": len(assetRepo.KnownAssets()),
-	}).Debug("Initializing repository for assets")
-
-	letters := generateLetterInstances(sender, metadata, recipientManager.Recipients)
-	texFiles := generateTexFiles(template, letters)
-	pdfFiles := compileTexFilesIntoPdf(texFiles)
-
 	outputDirectory, err := createOutputDirectory()
 	if err != nil {
 		return err
 	}
 
-	moveFilesToDir(pdfFiles, outputDirectory)
+	assets, err := findAssets(config.AssetsDirectory)
+	if err != nil {
+		return err
+	}
+
+	var movableAssets []MovableFile = make([]MovableFile, len(assets))
+	for i, d := range assets {
+		movableAssets[i] = &d
+	}
+
+	moveFilesToDir(movableAssets, outputDirectory)
+
+	letters := generateLetterInstances(sender, metadata, recipientManager.Recipients)
+	texFiles := generateTexFiles(template, letters)
+	pdfFiles := compileTexFilesIntoPdf(texFiles)
+
+	var movablePdfFiles []MovableFile = make([]MovableFile, len(pdfFiles))
+	for i, d := range pdfFiles {
+		movablePdfFiles[i] = &d
+	}
+	moveFilesToDir(movablePdfFiles, outputDirectory)
 
 	return nil
 }
@@ -216,18 +222,18 @@ func createOutputDirectory() (string, error) {
 	return cwd, nil
 }
 
-func moveFilesToDir(pdfFiles []converter.PdfFile, dir string) {
-	for _, f := range pdfFiles {
-		filename := filepath.Base(f.Path)
+func moveFilesToDir(files []MovableFile, dir string) {
+	for _, f := range files {
+		filename := filepath.Base(f.GetPath())
 		newPath := filepath.Join(dir, filename)
 
-		err := lgos.Copy(f.Path, newPath)
+		err := lgos.Copy(f.GetPath(), newPath)
 
 		if err != nil {
 			log.WithFields(log.Fields{
 				"msg":         err.Error(),
 				"status":      "failure",
-				"source":      f.Path,
+				"source":      f.GetPath(),
 				"destination": newPath,
 			}).Error("Moving generated pdf file")
 
@@ -238,4 +244,20 @@ func moveFilesToDir(pdfFiles []converter.PdfFile, dir string) {
 			"output_file": newPath,
 		}).Info("Creating letter")
 	}
+}
+
+func findAssets(srcDir string) ([]assets.Asset, error) {
+	assetRepo := assets.NewRepository(srcDir)
+
+	if err := assetRepo.Init(); err != nil {
+		return []assets.Asset{}, errors.Wrap(err, "init asset repo")
+	}
+
+	assets := assetRepo.KnownAssets()
+
+	log.WithFields(log.Fields{
+		"len(assets)": len(assets),
+	}).Debug("Initializing repository for assets")
+
+	return assets, nil
 }
