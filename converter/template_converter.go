@@ -52,8 +52,8 @@ func (c *TemplateConverter) Transform(
 	outputFile, err := os.Create(texFile.Path)
 
 	log.WithFields(log.Fields{
-		"file_name": fileName,
-		"path":      outputFile,
+		"file_name": texFile.Name,
+		"path":      texFile.Path,
 	}).Debug("Create new tex file")
 
 	if err != nil {
@@ -64,11 +64,6 @@ func (c *TemplateConverter) Transform(
 	if err != nil {
 		return TexFile{}, err
 	}
-
-	log.WithFields(log.Fields{
-		"file_name": fileName,
-		"path":      outputFile,
-	}).Debug("Render template into tex file")
 
 	return texFile, nil
 }

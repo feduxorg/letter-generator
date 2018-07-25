@@ -39,5 +39,6 @@ func NewTexFile(fileName string) (TexFile, error) {
 	return texFile, nil
 }
 
-//new_filename := fmt.Sprintf("%s.pdf", url.QueryEscape())
-//escaped_string = strings.Replace(lt.TexPath, old_filename, new_filename, -1)
+func (t *TexFile) NameForPdf() string {
+	return filepath.Join(t.Dir, t.Name+".pdf")
+}

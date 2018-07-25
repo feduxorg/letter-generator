@@ -99,7 +99,7 @@ func (p *Cli) Run(args []string) error {
 			Usage:   "build letters based on information in current directory",
 			Flags: []cli.Flag{
 				cli.BoolFlag{
-					Name:  "verbose, V",
+					Name:  "verbose,V",
 					Usage: "activate verbose logging",
 				},
 			},
@@ -191,8 +191,6 @@ func buildConfig(workDir string) letter_generator.Config {
 			"msg":    err.Error(),
 			"status": "failure",
 		}).Fatal("Getting home directory of current user")
-
-		os.Exit(1)
 	}
 
 	log.WithFields(log.Fields{

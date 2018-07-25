@@ -98,7 +98,7 @@ func compileTexFilesIntoPdf(texFiles []converter.TexFile) []converter.PdfFile {
 		pdfFile, err := compiler.Compile(f)
 
 		if err != nil {
-			log.WithFields(log.Fields{
+			log.WithError(err).WithFields(log.Fields{
 				"input_file":  f.Path,
 				"output_file": pdfFile.Path,
 			}).Info("Compiling tex file")
@@ -109,7 +109,7 @@ func compileTexFilesIntoPdf(texFiles []converter.TexFile) []converter.PdfFile {
 		log.WithFields(log.Fields{
 			"input_file":  f.Path,
 			"output_file": pdfFile.Path,
-		}).Info("Compiling tex file")
+		}).Info("Render letter as PDF")
 
 		pdfFiles = append(pdfFiles, pdfFile)
 	}
@@ -142,14 +142,10 @@ func moveFilesToDir(files []MovableFile, dir string) {
 				"status":      "failure",
 				"source":      f.GetPath(),
 				"destination": newPath,
-			}).Error("Moving generated pdf file")
+			}).Error("Moving file to dir")
 
 			continue
 		}
-
-		log.WithFields(log.Fields{
-			"output_file": newPath,
-		}).Info("Creating letter")
 	}
 }
 
