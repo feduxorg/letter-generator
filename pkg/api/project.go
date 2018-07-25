@@ -116,24 +116,12 @@ func compileTexFilesIntoPdf(texFiles []converter.TexFile) []converter.PdfFile {
 		log.WithFields(log.Fields{
 			"input_file":  f.Path,
 			"output_file": pdfFile.Path,
-		}).Info("Render letter as PDF")
+		}).Debug("Render letter as PDF")
 
 		pdfFiles = append(pdfFiles, pdfFile)
 	}
 
 	return pdfFiles
-}
-
-func createOutputDirectory() (string, error) {
-	cwd, err := os.Getwd()
-	dir := filepath.Join(cwd, "letters")
-	err = os.MkdirAll(dir, 0755)
-
-	if err != nil {
-		return "", errors.Wrap(err, "create output directory")
-	}
-
-	return cwd, nil
 }
 
 func moveFilesToDir(files []MovableFile, dir string) {

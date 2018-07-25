@@ -2,6 +2,8 @@ package api
 
 import (
 	_ "net/url"
+	"os"
+	"path/filepath"
 
 	"github.com/pkg/errors"
 
@@ -144,4 +146,16 @@ func findAssets(srcDir string) ([]assets.Asset, error) {
 	}).Debug("Initializing repository for assets")
 
 	return assets, nil
+}
+
+func createOutputDirectory() (string, error) {
+	cwd, err := os.Getwd()
+	dir := filepath.Join(cwd, "letters")
+	err = os.MkdirAll(dir, 0755)
+
+	if err != nil {
+		return "", errors.Wrap(err, "create output directory")
+	}
+
+	return dir, nil
 }
