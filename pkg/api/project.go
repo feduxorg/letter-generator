@@ -144,15 +144,18 @@ func moveFilesToDir(files []MovableFile, dir string) {
 		err := lgos.Copy(f.GetPath(), newPath)
 
 		if err != nil {
-			log.WithFields(log.Fields{
-				"msg":         err.Error(),
-				"status":      "failure",
+			log.WithError(err).WithFields(log.Fields{
 				"source":      f.GetPath(),
 				"destination": newPath,
 			}).Error("Moving file to dir")
 
 			continue
 		}
+
+		log.WithFields(log.Fields{
+			"source":      f.GetPath(),
+			"destination": newPath,
+		}).Debug("Moving file to dir")
 	}
 }
 
