@@ -130,23 +130,6 @@ func readLetterTemplate(srcFile string) (converter.Template, error) {
 	return template, nil
 }
 
-func renderTemplate(l letter.Letter, t converter.Template) (converter.TexFile, error) {
-	templateConverter := converter.NewConverter()
-	texFile, err := templateConverter.Transform(l, t)
-
-	if err != nil {
-		return converter.TexFile{}, errors.Wrap(err, "render template into tex file")
-	}
-
-	log.WithFields(log.Fields{
-		"path(tex_file)": texFile.Path,
-		"path(template)": t.Path,
-	}).Debug("Creating tex file from template")
-
-	return texFile, nil
-
-}
-
 func findAssets(srcDir string) ([]assets.Asset, error) {
 	assetRepo := assets.NewRepository(srcDir)
 

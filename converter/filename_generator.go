@@ -18,23 +18,21 @@ func (g *FilenameGenerator) GeneratePdf(input string) (string, error) {
 	}
 
 	re := regexp.MustCompile("\\.tex")
-	escaped_string := re.ReplaceAllLiteralString(input, ".pdf")
+	escapedString := re.ReplaceAllLiteralString(input, ".pdf")
 
-	return escaped_string, nil
+	return escapedString, nil
 }
 
-func (g *FilenameGenerator) GenerateTex(input string) (string, error) {
+func (g *FilenameGenerator) Generate(input string) (string, error) {
 	if input == "" {
 		return "", errors.New("Empty input is not allowed to generate file name for tex file")
 	}
 
-	escaped_string := strings.ToLower(input)
+	escapedString := strings.ToLower(input)
 	re := regexp.MustCompile("[[:blank:]]")
-	escaped_string = re.ReplaceAllLiteralString(escaped_string, "-")
+	escapedString = re.ReplaceAllLiteralString(escapedString, "-")
 	re = regexp.MustCompile("[^a-z0-9]")
-	escaped_string = re.ReplaceAllLiteralString(escaped_string, "")
+	escapedString = re.ReplaceAllLiteralString(escapedString, "")
 
-	escaped_string = escaped_string + ".tex"
-
-	return escaped_string, nil
+	return escapedString, nil
 }

@@ -31,26 +31,26 @@ func (p *Cli) Run(args []string) error {
 
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
-			Name:  "verbose, V",
+			Name:  "verbose,V",
 			Usage: "activate verbose logging",
 		},
 		cli.BoolFlag{
-			Name:  "show-config, C",
+			Name:  "show-config,C",
 			Usage: "Show configuration",
 		},
 	}
 
 	app.Action = func(c *cli.Context) error {
-		var working_directory string
+		var workDir string
 
 		if c.Args().Get(0) != "" {
-			working_directory = c.Args().Get(0)
+			workDir = c.Args().Get(0)
 		} else {
-			working_directory = get_current_working_directory()
+			workDir = getCwd()
 		}
 
-		config := build_config(working_directory)
-		parse_global_options(c, config)
+		config := buildConfig(workDir)
+		parseGlobalOptions(c, config)
 
 		err := build(config)
 
@@ -73,18 +73,18 @@ func (p *Cli) Run(args []string) error {
 				},
 			},
 			Action: func(c *cli.Context) error {
-				var working_directory string
+				var workDir string
 
 				if c.Args().Get(0) != "" {
-					working_directory = c.Args().Get(0)
+					workDir = c.Args().Get(0)
 				} else {
-					working_directory = get_current_working_directory()
+					workDir = getCwd()
 				}
 
-				config := build_config(working_directory)
-				parse_global_options(c, config)
+				config := buildConfig(workDir)
+				parseGlobalOptions(c, config)
 
-				err := initialize(working_directory, config)
+				err := initialize(workDir, config)
 
 				if err != nil {
 					return err
@@ -104,16 +104,16 @@ func (p *Cli) Run(args []string) error {
 				},
 			},
 			Action: func(c *cli.Context) error {
-				var working_directory string
+				var workDir string
 
 				if c.Args().Get(0) != "" {
-					working_directory = c.Args().Get(0)
+					workDir = c.Args().Get(0)
 				} else {
-					working_directory = get_current_working_directory()
+					workDir = getCwd()
 				}
 
-				config := build_config(working_directory)
-				parse_global_options(c, config)
+				config := buildConfig(workDir)
+				parseGlobalOptions(c, config)
 
 				err := build(config)
 
@@ -153,7 +153,7 @@ func initialize(dir string, config letter_generator.Config) error {
 	return nil
 }
 
-func parse_global_options(c *cli.Context, config letter_generator.Config) {
+func parseGlobalOptions(c *cli.Context, config letter_generator.Config) {
 	if c.Bool("verbose") == true {
 		log.SetLevel(log.DebugLevel)
 	} else {
@@ -165,28 +165,26 @@ func parse_global_options(c *cli.Context, config letter_generator.Config) {
 	}).Info("Parsing commandline options")
 }
 
-func get_current_working_directory() string {
-	current_directory, err := os.Getwd()
+func getCwd() string {
+	currentDir, err := os.Getwd()
 
 	if err != nil {
 		log.WithFields(log.Fields{
 			"msg":    err.Error(),
 			"status": "failure",
 		}).Fatal("Getting current directory")
-
-		os.Exit(1)
 	}
 
 	log.WithFields(log.Fields{
-		"path":   current_directory,
+		"path":   currentDir,
 		"status": "success",
 	}).Debug("Getting current directory")
 
-	return current_directory
+	return currentDir
 }
 
-func build_config(working_directory string) letter_generator.Config {
-	home_directory, err := lgos.HomeDirectory()
+func buildConfig(workDir string) letter_generator.Config {
+	homeDir, err := lgos.HomeDirectory()
 
 	if err != nil {
 		log.WithFields(log.Fields{
@@ -198,18 +196,18 @@ func build_config(working_directory string) letter_generator.Config {
 	}
 
 	log.WithFields(log.Fields{
-		"path":   home_directory,
+		"path":   homeDir,
 		"status": "success",
 	}).Debug("Getting home directory of current user")
 
 	config := letter_generator.Config{}
-	config.RemoteSources = []string{filepath.Join(home_directory, ".local/share/letter-template/.git"), "git@gitlab.com:maxmeyer/letter-template.git"}
+	config.RemoteSources = []string{filepath.Join(homeDir, ".local/share/letter-template/.git"), "git@gitlab.com:maxmeyer/letter-template.git"}
 	config.ConfigDirectory = ".lg"
-	config.RecipientsFile = filepath.Join(working_directory, config.ConfigDirectory, "data/to.json")
-	config.MetadataFile = filepath.Join(working_directory, config.ConfigDirectory, "data/metadata.json")
-	config.SenderFile = filepath.Join(working_directory, config.ConfigDirectory, "data/from.json")
-	config.TemplateFile = filepath.Join(working_directory, config.ConfigDirectory, "templates/letter.tex.tt")
-	config.AssetsDirectory = filepath.Join(working_directory, config.ConfigDirectory, "assets")
+	config.RecipientsFile = filepath.Join(workDir, config.ConfigDirectory, "data/to.json")
+	config.MetadataFile = filepath.Join(workDir, config.ConfigDirectory, "data/metadata.json")
+	config.SenderFile = filepath.Join(workDir, config.ConfigDirectory, "data/from.json")
+	config.TemplateFile = filepath.Join(workDir, config.ConfigDirectory, "templates/letter.tex.tt")
+	config.AssetsDirectory = filepath.Join(workDir, config.ConfigDirectory, "assets")
 
 	return config
 }

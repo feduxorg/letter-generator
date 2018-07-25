@@ -7,32 +7,36 @@ import (
 
 type TexFile struct {
 	Path string
+	Name string
+	Dir  string
 }
 
-func NewTexFile(file_name string) (TexFile, error) {
-	output_directory, err := ioutil.TempDir("", "letter_template_")
+func NewTexFile(fileName string) (TexFile, error) {
+	outputDir, err := ioutil.TempDir("", "letter_template_")
 
 	if err != nil {
 		return TexFile{}, err
 	}
 
-	output_directory, err = filepath.Abs(output_directory)
+	outputDir, err = filepath.Abs(outputDir)
 
 	if err != nil {
 		return TexFile{}, err
 	}
 
-	output_path := filepath.Join(output_directory, file_name)
+	outputPath := filepath.Join(outputDir, fileName+".tex")
 
 	if err != nil {
 		return TexFile{}, err
 	}
 
-	tex_file := TexFile{
-		Path: output_path,
+	texFile := TexFile{
+		Dir:  outputDir,
+		Path: outputPath,
+		Name: fileName,
 	}
 
-	return tex_file, nil
+	return texFile, nil
 }
 
 //new_filename := fmt.Sprintf("%s.pdf", url.QueryEscape())

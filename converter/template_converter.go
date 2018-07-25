@@ -5,6 +5,7 @@ import (
 	gotmpl "text/template"
 
 	"github.com/fedux-org/letter-generator-go/letter"
+	log "github.com/sirupsen/logrus"
 )
 
 type TemplateConverter struct{}
@@ -35,32 +36,39 @@ func (c *TemplateConverter) Transform(
 		HasPs:          letter.HasPs,
 	}
 
-	filename_generator := NewFilenameGenerator()
-	file_name, err := filename_generator.GenerateTex(context.Recipient.Name)
+	nameGen := NewFilenameGenerator()
+	fileName, err := nameGen.Generate(context.Recipient.Name)
 
 	if err != nil {
 		return TexFile{}, err
 	}
 
-	tex_file, err := NewTexFile(file_name)
+	texFile, err := NewTexFile(fileName)
 
 	if err != nil {
 		return TexFile{}, err
 	}
 
-	output_file, err := os.Create(tex_file.Path)
+	outputFile, err := os.Create(texFile.Path)
+
+	log.WithFields(log.Fields{
+		"file_name": fileName,
+		"path":      outputFile,
+	}).Debug("Create new tex file")
 
 	if err != nil {
 		return TexFile{}, err
 	}
 
-	err = tmpl.Execute(output_file, context)
-
+	err = tmpl.Execute(outputFile, context)
 	if err != nil {
 		return TexFile{}, err
 	}
 
-	return tex_file, nil
+	log.WithFields(log.Fields{
+		"file_name": fileName,
+		"path":      outputFile,
+	}).Debug("Render template into tex file")
 
-	// fmt.Println(output_file)
+	return texFile, nil
 }

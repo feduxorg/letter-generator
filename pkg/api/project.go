@@ -1,6 +1,7 @@
 package api
 
 import (
+	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -19,10 +20,25 @@ type Project struct {
 	template converter.Template
 	assets   []assets.Asset
 	outDir   string
+	workDir  string
 }
 
 func NewProject(letters []letter.Letter, template converter.Template, assets []assets.Asset, outDir string) Project {
-	return Project{letters: letters, template: template, assets: assets, outDir: outDir}
+	p := Project{letters: letters, template: template, assets: assets, outDir: outDir}
+	p.SetupWorkDir()
+
+	return p
+}
+
+func (p *Project) SetupWorkDir() error {
+	dir, err := ioutil.TempDir("", "lg")
+	if err != nil {
+		return errors.Wrap(err, "create temporary work dir")
+	}
+
+	p.workDir = dir
+
+	return nil
 }
 
 func (p *Project) Build() error {
@@ -31,9 +47,12 @@ func (p *Project) Build() error {
 		movableAssets[i] = &d
 	}
 
-	moveFilesToDir(movableAssets, p.outDir)
-
 	texFiles := generateTexFiles(p.template, p.letters)
+
+	for _, f := range texFiles {
+		moveFilesToDir(movableAssets, f.Dir)
+	}
+
 	pdfFiles := compileTexFilesIntoPdf(texFiles)
 
 	var movablePdfFiles []MovableFile = make([]MovableFile, len(pdfFiles))
@@ -41,6 +60,11 @@ func (p *Project) Build() error {
 		movablePdfFiles[i] = &d
 	}
 	moveFilesToDir(movablePdfFiles, p.outDir)
+
+	err := os.RemoveAll(p.workDir)
+	if err != nil {
+		return errors.Wrap(err, "remove work dir")
+	}
 
 	return nil
 }
@@ -127,4 +151,21 @@ func moveFilesToDir(files []MovableFile, dir string) {
 			"output_file": newPath,
 		}).Info("Creating letter")
 	}
+}
+
+func renderTemplate(l letter.Letter, t converter.Template) (converter.TexFile, error) {
+	templateConverter := converter.NewConverter()
+	texFile, err := templateConverter.Transform(l, t)
+
+	if err != nil {
+		return converter.TexFile{}, errors.Wrap(err, "render template into tex file")
+	}
+
+	log.WithFields(log.Fields{
+		"path(tex_file)": texFile.Path,
+		"path(template)": t.Path,
+	}).Debug("Creating tex file from template")
+
+	return texFile, nil
+
 }
