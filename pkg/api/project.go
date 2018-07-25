@@ -66,6 +66,13 @@ func (p *Project) Build() error {
 		return errors.Wrap(err, "remove work dir")
 	}
 
+	for _, f := range texFiles {
+		log.WithField("working_directory", f.Dir).Debug("Remove working directory")
+		os.RemoveAll(f.Dir)
+	}
+
+	log.WithField("working_directory", p.workDir).Debug("Remove working directory")
+
 	return nil
 }
 
