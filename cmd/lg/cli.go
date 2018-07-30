@@ -201,9 +201,9 @@ func buildConfig(workDir string) letter_generator.Config {
 	config := letter_generator.Config{}
 	config.RemoteSources = []string{filepath.Join(homeDir, ".local/share/letter-template/.git"), "git@gitlab.com:maxmeyer/letter-template.git"}
 	config.ConfigDirectory = ".lg"
-	config.RecipientsFile = filepath.Join(workDir, config.ConfigDirectory, "data/to.json")
-	config.MetadataFile = filepath.Join(workDir, config.ConfigDirectory, "data/metadata.json")
-	config.SenderFile = filepath.Join(workDir, config.ConfigDirectory, "data/from.json")
+	config.RecipientsFile = filepath.Join(workDir, config.ConfigDirectory, "data/to.yaml")
+	config.MetadataFile = filepath.Join(workDir, config.ConfigDirectory, "data/metadata.yaml")
+	config.SenderFile = filepath.Join(workDir, config.ConfigDirectory, "data/from.yaml")
 	config.TemplateFile = filepath.Join(workDir, config.ConfigDirectory, "templates/letter.tex.tt")
 	config.AssetsDirectory = filepath.Join(workDir, config.ConfigDirectory, "assets")
 

@@ -1,16 +1,17 @@
 package sender
 
 import (
-	"encoding/json"
 	"io/ioutil"
+
+	yaml "gopkg.in/yaml.v2"
 )
 
 type Sender struct {
-	Name   string `json:"name"`
-	Street string `json:"street"`
-	City   string `json:"city"`
-	Phone  string `json:"Phone"`
-	Mail   string `json:"Mail"`
+	Name   string `yaml:"name"`
+	Street string `yaml:"street"`
+	City   string `yaml:"city"`
+	Phone  string `yaml:"Phone"`
+	Mail   string `yaml:"Mail"`
 }
 
 func (s *Sender) Read(path string) error {
@@ -20,7 +21,7 @@ func (s *Sender) Read(path string) error {
 		return err
 	}
 
-	err = json.Unmarshal(data, &s)
+	err = yaml.Unmarshal(data, &s)
 
 	if err != nil {
 		return err

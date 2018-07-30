@@ -1,17 +1,18 @@
 package metadata
 
 import (
-	"encoding/json"
 	"io/ioutil"
+
+	yaml "gopkg.in/yaml.v2"
 )
 
 type Metadata struct {
-	Subject        string `json:"subject"`
-	Signature      string `json:"signature"`
-	Opening        string `json:"opening"`
-	Closing        string `json:"closing"`
-	HasAttachments bool   `json:"has_attachments"`
-	HasPs          bool   `json:"has_ps"`
+	Subject        string `yaml:"subject"`
+	Signature      string `yaml:"signature"`
+	Opening        string `yaml:"opening"`
+	Closing        string `yaml:"closing"`
+	HasAttachments bool   `yaml:"has_attachments"`
+	HasPs          bool   `yaml:"has_ps"`
 }
 
 func (m *Metadata) Read(path string) error {
@@ -21,7 +22,7 @@ func (m *Metadata) Read(path string) error {
 		return err
 	}
 
-	err = json.Unmarshal(data, &m)
+	err = yaml.Unmarshal(data, &m)
 
 	if err != nil {
 		return err

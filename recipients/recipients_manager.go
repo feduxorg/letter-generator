@@ -1,8 +1,9 @@
 package recipients
 
 import (
-	"encoding/json"
 	"io/ioutil"
+
+	yaml "gopkg.in/yaml.v2"
 )
 
 type RecipientManager struct {
@@ -17,7 +18,7 @@ func (m *RecipientManager) Read(path string) error {
 	}
 
 	var recipients []Recipient
-	err = json.Unmarshal(data, &recipients)
+	err = yaml.Unmarshal(data, &recipients)
 
 	if err != nil {
 		return err
