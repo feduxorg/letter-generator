@@ -53,7 +53,11 @@ func (lc *LetterBuilder) Build(config letter_generator.Config) error {
 	letters := generateLetterInstances(sender, metadata, recipientManager.Recipients)
 
 	project := NewProject(letters, template, assets, outputDirectory)
+
 	err = project.Build()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

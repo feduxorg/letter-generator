@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/pkg/errors"
 
@@ -47,21 +48,34 @@ func (p *Project) Build() error {
 		movableAssets[i] = &d
 	}
 
-	texFiles := generateTexFiles(p.template, p.letters)
-
-	for _, f := range texFiles {
-		moveFilesToDir(movableAssets, f.Dir)
+	texFiles, err := generateTexFiles(p.template, p.letters)
+	if err != nil {
+		return errors.Wrap(err, "generate tex file")
 	}
 
-	pdfFiles := compileTexFilesIntoPdf(texFiles)
+	for _, f := range texFiles {
+		err := moveFilesToDir(movableAssets, f.Dir)
+		if err != nil {
+			return errors.Wrap(err, "move files")
+		}
+	}
+
+	pdfFiles, err := compileTexFilesIntoPdf(texFiles)
+	if err != nil {
+		return errors.Wrap(err, "compile tex into pdf")
+	}
 
 	var movablePdfFiles []MovableFile = make([]MovableFile, len(pdfFiles))
 	for i, d := range pdfFiles {
 		movablePdfFiles[i] = &d
 	}
-	moveFilesToDir(movablePdfFiles, p.outDir)
 
-	err := os.RemoveAll(p.workDir)
+	err = moveFilesToDir(movablePdfFiles, p.outDir)
+	if err != nil {
+		return errors.Wrap(err, "move files")
+	}
+
+	err = os.RemoveAll(p.workDir)
 	if err != nil {
 		return errors.Wrap(err, "remove work dir")
 	}
@@ -73,31 +87,30 @@ func (p *Project) Build() error {
 
 	log.WithField("working_directory", p.workDir).Debug("Remove working directory")
 
+	files, err := filepath.Glob(filepath.Join(p.outDir, "*.pdf"))
+
+	log.WithFields(log.Fields{"count(letters)": len(files), "files": strings.Join(files, ",")}).Info("Generate letters")
+
 	return nil
 }
 
-func generateTexFiles(template converter.Template, letters []letter.Letter) []converter.TexFile {
+func generateTexFiles(template converter.Template, letters []letter.Letter) ([]converter.TexFile, error) {
 	var texFiles []converter.TexFile
 
 	for _, l := range letters {
 		texFile, err := renderTemplate(l, template)
 
 		if err != nil {
-			log.WithError(err).WithFields(log.Fields{
-				"letter":         l,
-				"path(template)": template.Path,
-			}).Error("Render letter into template")
-
-			continue
+			return []converter.TexFile{}, err
 		}
 
 		texFiles = append(texFiles, texFile)
 	}
 
-	return texFiles
+	return texFiles, nil
 }
 
-func compileTexFilesIntoPdf(texFiles []converter.TexFile) []converter.PdfFile {
+func compileTexFilesIntoPdf(texFiles []converter.TexFile) ([]converter.PdfFile, error) {
 	compiler := latex.NewCompiler()
 	var pdfFiles []converter.PdfFile
 
@@ -105,12 +118,7 @@ func compileTexFilesIntoPdf(texFiles []converter.TexFile) []converter.PdfFile {
 		pdfFile, err := compiler.Compile(f)
 
 		if err != nil {
-			log.WithError(err).WithFields(log.Fields{
-				"input_file":  f.Path,
-				"output_file": pdfFile.Path,
-			}).Info("Compiling tex file")
-
-			continue
+			return []converter.PdfFile{}, err
 		}
 
 		log.WithFields(log.Fields{
@@ -121,23 +129,17 @@ func compileTexFilesIntoPdf(texFiles []converter.TexFile) []converter.PdfFile {
 		pdfFiles = append(pdfFiles, pdfFile)
 	}
 
-	return pdfFiles
+	return pdfFiles, nil
 }
 
-func moveFilesToDir(files []MovableFile, dir string) {
+func moveFilesToDir(files []MovableFile, dir string) error {
 	for _, f := range files {
 		filename := filepath.Base(f.GetPath())
 		newPath := filepath.Join(dir, filename)
 
 		err := lgos.Copy(f.GetPath(), newPath)
-
 		if err != nil {
-			log.WithError(err).WithFields(log.Fields{
-				"source":      f.GetPath(),
-				"destination": newPath,
-			}).Error("Moving file to dir")
-
-			continue
+			return err
 		}
 
 		log.WithFields(log.Fields{
@@ -145,6 +147,8 @@ func moveFilesToDir(files []MovableFile, dir string) {
 			"destination": newPath,
 		}).Debug("Moving file to dir")
 	}
+
+	return nil
 }
 
 func renderTemplate(l letter.Letter, t converter.Template) (converter.TexFile, error) {
