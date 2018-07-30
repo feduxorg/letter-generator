@@ -6,4 +6,7 @@ type Recipient struct {
 	Street         string            `yaml:"street"`
 	City           string            `yaml:"city"`
 	AdditionalInfo map[string]string `yaml:"additional_info"`
+	MailAddress    string            `yaml:"mail_adress"`
+	FaxNumber      string            `yaml:"fax_number"`
+	PhoneNumber    string            `yaml:"phone_number"`
 }
