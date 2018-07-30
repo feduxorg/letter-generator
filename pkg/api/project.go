@@ -43,11 +43,6 @@ func (p *Project) SetupWorkDir() error {
 }
 
 func (p *Project) Build() error {
-	var movableAssets []MovableFile = make([]MovableFile, len(p.assets))
-	for i, d := range p.assets {
-		movableAssets[i] = &d
-	}
-
 	texFiles, err := generateTexFiles(p.template, p.letters)
 
 	defer func() {
@@ -59,6 +54,11 @@ func (p *Project) Build() error {
 
 	if err != nil {
 		return errors.Wrap(err, "generate tex file")
+	}
+
+	var movableAssets []MovableFile = make([]MovableFile, len(p.assets))
+	for i, d := range p.assets {
+		movableAssets[i] = d
 	}
 
 	for _, f := range texFiles {
@@ -75,7 +75,7 @@ func (p *Project) Build() error {
 
 	var movablePdfFiles []MovableFile = make([]MovableFile, len(pdfFiles))
 	for i, d := range pdfFiles {
-		movablePdfFiles[i] = &d
+		movablePdfFiles[i] = d
 	}
 
 	err = moveFilesToDir(movablePdfFiles, p.outDir)
