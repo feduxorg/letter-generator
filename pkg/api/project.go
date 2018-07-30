@@ -1,8 +1,6 @@
 package api
 
 import (
-	"io/ioutil"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -21,32 +19,22 @@ type Project struct {
 	template converter.Template
 	assets   []assets.Asset
 	outDir   string
-	workDir  string
 }
 
 func NewProject(letters []letter.Letter, template converter.Template, assets []assets.Asset, outDir string) Project {
 	p := Project{letters: letters, template: template, assets: assets, outDir: outDir}
-	p.SetupWorkDir()
 
 	return p
-}
-
-func (p *Project) SetupWorkDir() error {
-	dir, err := ioutil.TempDir("", "lg")
-	if err != nil {
-		return errors.Wrap(err, "create temporary work dir")
-	}
-
-	p.workDir = dir
-
-	return nil
 }
 
 func (p *Project) Build() error {
 	texFiles, err := generateTexFiles(p.template, p.letters)
 
 	defer func() {
-		log.Debug("Invoke clean up function")
+		log.WithFields(log.Fields{
+			"count(files)": len(texFiles),
+		}).Debug("Clean up after build")
+
 		for _, f := range texFiles {
 			f.Destroy()
 		}
@@ -82,18 +70,6 @@ func (p *Project) Build() error {
 	if err != nil {
 		return errors.Wrap(err, "move files")
 	}
-
-	err = os.RemoveAll(p.workDir)
-	if err != nil {
-		return errors.Wrap(err, "remove work dir")
-	}
-
-	for _, f := range texFiles {
-		log.WithField("working_directory", f.Dir).Debug("Remove working directory")
-		os.RemoveAll(f.Dir)
-	}
-
-	log.WithField("working_directory", p.workDir).Debug("Remove working directory")
 
 	files, err := filepath.Glob(filepath.Join(p.outDir, "*.pdf"))
 
