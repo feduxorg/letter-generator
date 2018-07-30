@@ -5,6 +5,7 @@ import (
 	gotmpl "text/template"
 
 	"github.com/fedux-org/letter-generator-go/letter"
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -18,13 +19,6 @@ func (c *TemplateConverter) Transform(
 	letter letter.Letter,
 	template Template,
 ) (TexFile, error) {
-
-	tmpl, err := gotmpl.New("letter_template").Parse(template.Content)
-
-	if err != nil {
-		return TexFile{}, err
-	}
-
 	context := TemplateContext{
 		Recipient:      &letter.Recipient,
 		Sender:         &letter.Sender,
@@ -60,9 +54,15 @@ func (c *TemplateConverter) Transform(
 		return TexFile{}, err
 	}
 
+	tmpl, err := gotmpl.New(template.Path).Parse(template.Content)
+
+	if err != nil {
+		return TexFile{}, errors.Wrap(err, "create template instance")
+	}
+
 	err = tmpl.Execute(outputFile, context)
 	if err != nil {
-		return TexFile{}, err
+		return texFile, errors.Wrap(err, "render template")
 	}
 
 	return texFile, nil

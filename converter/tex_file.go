@@ -2,7 +2,10 @@ package converter
 
 import (
 	"io/ioutil"
+	"os"
 	"path/filepath"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 type TexFile struct {
@@ -39,6 +42,26 @@ func NewTexFile(fileName string) (TexFile, error) {
 	return texFile, nil
 }
 
-func (t *TexFile) NameForPdf() string {
-	return filepath.Join(t.Dir, t.Name+".pdf")
+func (f *TexFile) NameForPdf() string {
+	return filepath.Join(f.Dir, f.Name+".pdf")
+}
+
+func (f *TexFile) Destroy() error {
+	log.WithField("directory", f.Dir).Debug("Remove build dir")
+
+	if f.Dir == "" {
+		log.WithField("result", false).Debug("Verify directory is set")
+		return nil
+	}
+
+	if _, err := os.Stat(f.Dir); os.IsNotExist(err) {
+		log.WithFields(log.Fields{
+			"path":   f.Dir,
+			"result": false,
+		}).Debug("Verify directory exists")
+
+		return nil
+	}
+
+	return os.RemoveAll(f.Dir)
 }

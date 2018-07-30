@@ -49,6 +49,14 @@ func (p *Project) Build() error {
 	}
 
 	texFiles, err := generateTexFiles(p.template, p.letters)
+
+	defer func() {
+		log.Debug("Invoke clean up function")
+		for _, f := range texFiles {
+			f.Destroy()
+		}
+	}()
+
 	if err != nil {
 		return errors.Wrap(err, "generate tex file")
 	}
@@ -99,13 +107,14 @@ func generateTexFiles(template converter.Template, letters []letter.Letter) ([]c
 
 	for _, l := range letters {
 		texFile, err := renderTemplate(l, template)
+		texFiles = append(texFiles, texFile)
 
 		if err != nil {
-			return []converter.TexFile{}, err
+			return texFiles, err
 		}
-
-		texFiles = append(texFiles, texFile)
 	}
+
+	log.WithFields(log.Fields{"count(tex files)": len(texFiles)}).Info("Generated tex files")
 
 	return texFiles, nil
 }
