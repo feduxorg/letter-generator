@@ -18,7 +18,7 @@ jobs:
 
     - name: Install external dependencies
       run: |
-        apt-get install -y libgit2
+        sudo apt-get install -y libgit2
 
     - name: Get dependencies
       run: |
