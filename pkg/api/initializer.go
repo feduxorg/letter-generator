@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/fedux-org/letter-generator-go/letter_generator"
-	"github.com/libgit2/git2go"
+	git "github.com/libgit2/git2go"
 	log "github.com/sirupsen/logrus"
 )
 
