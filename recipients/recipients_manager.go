@@ -24,7 +24,17 @@ func (m *RecipientManager) Read(path string) error {
 		return err
 	}
 
-	m.Recipients = recipients
+	var tempR []Recipient
+
+	for _, r := range recipients {
+		if r.Ignore == true {
+			continue
+		}
+
+		tempR = append(tempR, r)
+	}
+
+	m.Recipients = tempR
 
 	return nil
 }
