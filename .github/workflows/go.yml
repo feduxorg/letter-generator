@@ -20,5 +20,8 @@ jobs:
       run: |
         go get -v -t -d ./...
 
+    - name: Test
+      run: bin/test
+
     - name: Build
-      run: make
+      run: bin/build
