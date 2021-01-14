@@ -21,12 +21,97 @@ jobs:
         sudo apt-get update -y \
         && sudo apt-get install -y libgit2-dev
 
-    - name: Get dependencies
+    - name: get dependencies
       run: |
         go get -v -t -d ./...
 
-    - name: Test
+    - name: test
       run: bin/test
 
-    - name: Build
+    - name: build linux amd64
       run: bin/build
+      env:
+        GOOS: linux
+        GOARCH: amd64
+
+    - name: build windows amd64
+      run: bin/build
+      env:
+        GOOS: windows
+        GOARCH: amd64
+
+    - name: build darwin amd64
+      run: bin/build
+      env:
+        GOOS: darwin
+        GOARCH: amd64
+
+    - name: package software for linux amd64
+      run: bin/package
+      env:
+        GOOS: linux
+        GOARCH: amd64
+      if: startsWith(github.ref, 'refs/tags/')
+
+    - name: package software for windows amd64
+      run: bin/package
+      env:
+        GOOS: windows
+        GOARCH: amd64
+      if: startsWith(github.ref, 'refs/tags/')
+
+    - name: package software for darwin amd64
+      run: bin/package
+      env:
+        GOOS: darwin
+        GOARCH: amd64
+      if: startsWith(github.ref, 'refs/tags/')
+
+    - name: create release
+      id: create_release
+      uses: actions/create-release@v1.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+      if: startsWith(github.ref, 'refs/tags/')
+
+    - name: Upload release asset for linux amd64
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/linux/amd64/local-webserver-linux_amd64.tar.gz
+        asset_name: local-webserver-linux_amd64.tar.gz
+        asset_content_type: application/gzip
+      if: startsWith(github.ref, 'refs/tags/')
+
+    - name: Upload release asset for windows amd64
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GOOS: windows
+        GOARCH: amd64
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/windows/amd64/local-webserver-windows_amd64.tar.gz
+        asset_name: local-webserver-windows_amd64.tar.gz
+        asset_content_type: application/gzip
+      if: startsWith(github.ref, 'refs/tags/')
+
+    - name: Upload release asset for darwin amd64
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GOOS: darwin
+        GOARCH: amd64
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/darwin/amd64/local-webserver-darwin_amd64.tar.gz
+        asset_name: local-webserver-darwin_amd64.tar.gz
+        asset_content_type: application/gzip
+      if: startsWith(github.ref, 'refs/tags/')

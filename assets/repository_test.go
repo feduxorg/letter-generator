@@ -1,11 +1,16 @@
-package assets_test
+pGOOS=windows GOARCH=amd64 GOROOT_BOOTSTRAP=/usr/lib/go ./make.bash
+# [...]
+# => Installed Go for windows/amd64 in /root/.local/share/go-source
+# => Installed commands in /root/.local/share/go-source/bin
+
+GOOS=darwin GOARCH=amd64 GOROOT_BOOTSTRAP=/usr/lib/go ./make.bashackage assets_test
 
 import (
 	"os"
 	"testing"
 
-	"github.com/fedux-org/letter-generator-go/assets"
-	"github.com/fedux-org/letter-generator-go/test"
+	"github.com/feduxorg/letter-generator-go/assets"
+	"github.com/feduxorg/letter-generator-go/test"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+source ./env.sh
+
+if [ "$CI_REGISTRY" == " " -o -z "$CI_REGISTRY" ]; then
+  DOCKER_TAG=$CI_PROJECT_PATH
+else
+  DOCKER_TAG=$CI_REGISTRY/$CI_PROJECT_PATH
+fi
+
+echo docker push $DOCKER_TAG:$CI_COMMIT_SHA
+docker push $DOCKER_TAG:$CI_COMMIT_SHA

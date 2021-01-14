@@ -4,17 +4,17 @@ all: build
 
 .PHONY: build
 build:
-	go build -o dist/lg github.com/fedux-org/letter-generator-go/cmd/lg
+	bin/build
 
 .PHONY: test
 test:
 ifeq ($(DEBUG), 1)
-	  go test ./... -d
+	  bin/test -d
 else
-	  go test ./...
+	  bin/test
 endif
 
 
 .PHONY: clean
 clean:
-	rm -rf dist/
+	bin/clean

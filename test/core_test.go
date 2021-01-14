@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/fedux-org/letter-generator-go/test"
+	"github.com/feduxorg/letter-generator-go/test"
 	"github.com/stretchr/testify/assert"
 )
 

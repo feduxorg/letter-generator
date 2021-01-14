@@ -7,13 +7,13 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/fedux-org/letter-generator-go/assets"
-	"github.com/fedux-org/letter-generator-go/converter"
-	"github.com/fedux-org/letter-generator-go/letter"
-	"github.com/fedux-org/letter-generator-go/letter_generator"
-	"github.com/fedux-org/letter-generator-go/metadata"
-	"github.com/fedux-org/letter-generator-go/recipients"
-	"github.com/fedux-org/letter-generator-go/sender"
+	"github.com/feduxorg/letter-generator-go/assets"
+	"github.com/feduxorg/letter-generator-go/converter"
+	"github.com/feduxorg/letter-generator-go/letter"
+	"github.com/feduxorg/letter-generator-go/letter_generator"
+	"github.com/feduxorg/letter-generator-go/metadata"
+	"github.com/feduxorg/letter-generator-go/recipients"
+	"github.com/feduxorg/letter-generator-go/sender"
 	log "github.com/sirupsen/logrus"
 )
 

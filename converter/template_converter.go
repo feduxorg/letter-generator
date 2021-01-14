@@ -4,7 +4,7 @@ import (
 	"os"
 	gotmpl "text/template"
 
-	"github.com/fedux-org/letter-generator-go/letter"
+	"github.com/feduxorg/letter-generator-go/letter"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )

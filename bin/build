@@ -1,3 +1,11 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
-make build $*
+set -x
+
+: ${GOOS:=linux}
+: ${GOARCH:=amd64}
+
+COMMIT_HASH=$(git rev-parse --short HEAD 2>/dev/null)
+BUILD_DATE=$(date +%FT%T%z)
+
+GO111MODULE=on CGO_ENABLED=0 go build  $* -a -installsuffix cgo -ldflags "-w -s -X github.com/feduxorg/letter-generator-go/cli.CommitHash=${COMMIT_HASH} -X github.com/feduxorg/letter-generator-go/cli.BuildDate=${BUILD_DATE}" -o dist/${GOOS}/${GOARCH}/lg cmd/lg

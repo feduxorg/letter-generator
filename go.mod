@@ -1,8 +1,9 @@
-module github.com/fedux-org/letter-generator-go
+module github.com/feduxorg/letter-generator-go
 
 go 1.12
 
 require (
+	github.com/feduxorg/letter-generator-go v0.0.0-20191219131517-247cf463c8c8
 	github.com/libgit2/git2go v0.28.4
 	github.com/pkg/errors v0.8.1
 	github.com/sirupsen/logrus v1.4.2

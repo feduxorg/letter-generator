@@ -1,9 +1,9 @@
 package letter
 
 import (
-	"github.com/fedux-org/letter-generator-go/metadata"
-	"github.com/fedux-org/letter-generator-go/recipients"
-	"github.com/fedux-org/letter-generator-go/sender"
+	"github.com/feduxorg/letter-generator-go/metadata"
+	"github.com/feduxorg/letter-generator-go/recipients"
+	"github.com/feduxorg/letter-generator-go/sender"
 )
 
 type Letter struct {

@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+source ./env.sh
+
+if [ "$1" == "sh" ]; then
+  DOCKER_TERMARGS=-it
+else
+  DOCKER_TERMARGS=-i
+fi
+
+if [ "$CI_REGISTRY" == " " -o -z "$CI_REGISTRY" ]; then
+  DOCKER_TAG=$CI_PROJECT_PATH
+else
+  DOCKER_TAG=$CI_REGISTRY/$CI_PROJECT_PATH
+fi
+
+echo docker run $DOCKER_TERMARGS --name ${CI_PROJECT_NAME}-1 --rm ${DOCKER_TAG}:${CI_COMMIT_SHA} $*
+docker run $DOCKER_TERMARGS --name ${CI_PROJECT_NAME}-1 --rm ${DOCKER_TAG}:${CI_COMMIT_SHA} $*

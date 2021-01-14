@@ -3,6 +3,8 @@ github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d h1:U+s90UTSY
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/feduxorg/letter-generator-go v0.0.0-20191219131517-247cf463c8c8 h1:hmPIsCwYzAHKzqlIJoAdYu7EMvLIFknPlKWR2ZsNMIg=
+github.com/feduxorg/letter-generator-go v0.0.0-20191219131517-247cf463c8c8/go.mod h1:4tIbUQ8otwhFAuE/WxPix02OgdtyTNvFD9EdgP07W+M=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1 h1:mweAR1A6xJ3oS2pRaGiHgQ4OO8tzTaLawm8vnODuwDk=
 github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
 github.com/maxmeyer/git2go v0.28.4 h1:3xnrJXnAArIgI+Feq3v73E5eovAKKmXDGZtk74CrC8o=

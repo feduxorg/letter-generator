@@ -1,3 +1,5 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 echo install libgit2
+
+go get -d -v ./...

@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+: ${GOOS:=linux}
+: ${GOARCH:=amd64}
+
+echo tar -C dist/${GOOS}/${GOARCH}/ -v --exclude *.gz -czf dist/${GOOS}/${GOARCH}/local-webserver-${GOOS}_${GOARCH}.tar.gz lw
+tar -C dist/${GOOS}/${GOARCH}/ -v --exclude *.gz -czf dist/${GOOS}/${GOARCH}/local-webserver-${GOOS}_${GOARCH}.tar.gz lw
