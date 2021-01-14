@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
-	github.com/feduxorg/letter-generator-go v1.0.0
+	github.com/feduxorg/letter-generator-go v1.0.1
 	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
 	github.com/libgit2/git2go v0.28.4
 	github.com/pkg/errors v0.9.1
