@@ -8,7 +8,7 @@ jobs:
     steps:
 
     - name: Set up Go 1.15
-      uses: actions/setup-go@v1
+      uses: actions/setup-go@v2
       with:
         go-version: 1.15
       id: go
@@ -23,8 +23,9 @@ jobs:
 
     - name: set up git2go for static mode
       run: |
+        export GOPATH=$HOME/go
         go get -d github.com/libgit2/git2go
-        cd $GOROOT/src/github.com/libgit2/git2go
+        cd $GOPATH/src/github.com/libgit2/git2go
         git checkout release-1.1
         git submodule update --init # get libgit2
         make install-static
