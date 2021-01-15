@@ -2,8 +2,6 @@ module github.com/feduxorg/letter-generator
 
 go 1.12
 
-//replace github.com/libgit2/git2go => github.com/maxmeyer/git2go v0.28.4
-
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/libgit2/git2go/v31 v31.4.7
@@ -17,3 +15,5 @@ require (
 	golang.org/x/sys v0.0.0-20210113181707-4bcb84eeeb78 // indirect
 	gopkg.in/yaml.v2 v2.4.0
 )
+
+replace github.com/libgit2/git2go/v31 => ./ext_deps/git2go

@@ -1,5 +1,17 @@
 #!/bin/bash
 
-echo install libgit2
+source ./env.sh
 
+echo --- Build static git2go
+
+git submodule update --init # get git2go
+cd ext_deps/git2go
+git checkout ${LIBGIT2_TAG}
+git submodule update --init # get libgit2
+make install-static
+cd -
+
+echo
+echo --- Install dependencies
+echo go get -d -v ./...
 go get -d -v ./...

@@ -8,6 +8,8 @@ jobs:
     steps:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
+      with:
+        submodules: recursive
 
     - name: Set up Go 1.15
       uses: actions/setup-go@v2
@@ -20,41 +22,35 @@ jobs:
         sudo apt-get update -y \
         && sudo apt-get install -y cmake pkg-config gcc libssh2-1-dev libssl-dev
 
-    - name: set up git2go for static mode
-      run: |
-        git clone https://github.com/libgit2/git2go
-        cd git2go/
-        git checkout release-1.1
-        git submodule update --init # get libgit2
-        make install-static
-
     - name: get dependencies
       run: |
-        go get -v -t -d ./...
+        bin/setup
 
     - name: test
       run: bin/test
+      env:
+        GO_TAGS: static
 
     - name: build linux amd64
       run: bin/build
       env:
         GOOS: linux
         GOARCH: amd64
-        BUILD_TAGS: static
+        GO_TAGS: static
 
     - name: build windows amd64
       run: bin/build
       env:
         GOOS: windows
         GOARCH: amd64
-        BUILD_TAGS: static
+        GO_TAGS: static
 
     - name: build darwin amd64
       run: bin/build
       env:
         GOOS: darwin
         GOARCH: amd64
-        BUILD_TAGS: static
+        GO_TAGS: static
 
     - name: package software for linux amd64
       run: bin/package

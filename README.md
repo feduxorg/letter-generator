@@ -77,6 +77,42 @@ lg build -V
 After building letters, you will find a directory called `letters` in the
 current directory.
 
+## Development
+
+### Build letter-generator from its sources
+
+~~~
+bin/setup
+bin/build
+bin/test
+~~~
+
+### Central configuration file for helper scripts
+
+Configuration for helper scripts is done via environment variables in [`env.sh`](env.sh).
+
+### Upgrade git2go / libgit2
+
+See https://github.com/libgit2/git2go#master-branch-or-vendored-static-linking
+for more information about this. 
+
+If you plan to upgrade your version, you need to modify a few files.
+
+1. Update version for "libgit2" in `env.sh`
+
+  ~~~bash
+: ${LIBGIT2_TAG:=release-1.1}
+  ~~~
+
+2. Update version of "git2go" in `go.mod`
+
+  ~~~bash
+  # [...]
+  github.com/libgit2/git2go/v31 v31.4.7
+  # [...]
+  replace github.com/libgit2/git2go/v31 => ./ext_deps/git2go
+  ~~~
+
 ## Copyright
 
 (c) 2021, Dennis Günnewig
