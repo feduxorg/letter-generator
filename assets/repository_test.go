@@ -1,9 +1,4 @@
-pGOOS=windows GOARCH=amd64 GOROOT_BOOTSTRAP=/usr/lib/go ./make.bash
-# [...]
-# => Installed Go for windows/amd64 in /root/.local/share/go-source
-# => Installed commands in /root/.local/share/go-source/bin
-
-GOOS=darwin GOARCH=amd64 GOROOT_BOOTSTRAP=/usr/lib/go ./make.bashackage assets_test
+package assets_test
 
 import (
 	"os"
