@@ -1,76 +1,53 @@
 package api
 
 import (
-	"errors"
 	_ "path/filepath"
-	"strings"
 
 	"github.com/feduxorg/letter-generator-go/letter_generator"
-	git "github.com/libgit2/git2go"
+	git "github.com/libgit2/git2go/v31"
 	log "github.com/sirupsen/logrus"
 )
 
 type Initializer struct{}
 
 func (i *Initializer) Init(dir string, config letter_generator.Config) error {
-	//dir = filepath.Join(dir, config.ConfigDirectory)
+	tmplSource := config.TemplateSource
 
 	log.WithFields(log.Fields{
-		"known_sources": strings.Join(config.RemoteSources, ", "),
-		"destination":   dir,
+		"template_source": tmplSource,
+		"destination":     dir,
 	}).Debug("Starting to clone config repository")
 
-	var remote_source_cloned bool
-	remote_source_cloned = false
+	repo, err := git.Clone(tmplSource, dir, &git.CloneOptions{})
 
-	for _, s := range config.RemoteSources {
-		if remote_source_cloned == true {
-			break
-		}
-
-		repo, err := git.Clone(s, dir, &git.CloneOptions{})
-
-		if err != nil {
-			log.WithFields(log.Fields{
-				"source":      s,
-				"destination": dir,
-				"msg":         err.Error(),
-				"status":      "failure",
-			}).Debug("Cloning config repository")
-
-			continue
-		}
-
-		remote := "origin"
-		repo.Remotes.Delete(remote)
-
-		if err != nil {
-			log.WithFields(log.Fields{
-				"repository": repo,
-				"remote":     remote,
-				"msg":        err.Error(),
-				"status":     "failure",
-			}).Warn("Removing remote failed")
-		}
-
-		remote_source_cloned = true
-
+	if err != nil {
 		log.WithFields(log.Fields{
-			"source":      s,
+			"source":      tmplSource,
 			"destination": dir,
-			"status":      "success",
+			"msg":         err.Error(),
+			"status":      "failure",
 		}).Debug("Cloning config repository")
+
+		return err
 	}
 
-	if remote_source_cloned == false {
+	remote := "origin"
+	repo.Remotes.Delete(remote)
 
+	if err != nil {
 		log.WithFields(log.Fields{
-			"msg":    "No valid remote sources found",
-			"status": "failure",
-		}).Fatal("Cloning config repository")
-
-		return errors.New("No valid remote sources found")
+			"repository": repo,
+			"remote":     remote,
+			"msg":        err.Error(),
+			"status":     "failure",
+		}).Warn("Removing remote failed")
 	}
+
+	log.WithFields(log.Fields{
+		"source":      tmplSource,
+		"destination": dir,
+		"status":      "success",
+	}).Debug("Cloning config repository")
 
 	return nil
 }

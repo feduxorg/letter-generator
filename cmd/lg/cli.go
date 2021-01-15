@@ -60,6 +60,10 @@ func (p *Cli) Run(args []string) error {
 					Name:  "verbose, V",
 					Usage: "activate verbose logging",
 				},
+				cli.StringFlag{
+					Name:  "template-source, t",
+					Usage: "git repository with templates",
+				},
 			},
 			Action: func(c *cli.Context) error {
 				var workDir string
@@ -72,6 +76,10 @@ func (p *Cli) Run(args []string) error {
 
 				config := buildConfig(workDir)
 				parseGlobalOptions(c, config)
+
+				if c.String("template-source") != "" {
+					config.TemplateSource = c.String("template-source")
+				}
 
 				err := initialize(workDir, config)
 
@@ -188,7 +196,7 @@ func buildConfig(workDir string) letter_generator.Config {
 	}).Debug("Getting home directory of current user")
 
 	config := letter_generator.Config{}
-	config.RemoteSources = []string{filepath.Join(homeDir, ".local/share/letter-template/.git"), "git@gitlab.com:maxmeyer/letter-template.git"}
+	config.TemplateSource = filepath.Join(homeDir, ".local/share/letter-template/.git")
 	config.ConfigDirectory = ".lg"
 	config.RecipientsFile = filepath.Join(workDir, config.ConfigDirectory, "data/to.yaml")
 	config.MetadataFile = filepath.Join(workDir, config.ConfigDirectory, "data/metadata.yaml")
