@@ -6,11 +6,11 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/feduxorg/letter-generator-go/assets"
-	"github.com/feduxorg/letter-generator-go/converter"
-	"github.com/feduxorg/letter-generator-go/latex"
-	"github.com/feduxorg/letter-generator-go/letter"
-	lgos "github.com/feduxorg/letter-generator-go/os"
+	"github.com/feduxorg/letter-generator/assets"
+	"github.com/feduxorg/letter-generator/converter"
+	"github.com/feduxorg/letter-generator/latex"
+	"github.com/feduxorg/letter-generator/letter"
+	lgos "github.com/feduxorg/letter-generator/os"
 	log "github.com/sirupsen/logrus"
 )
 

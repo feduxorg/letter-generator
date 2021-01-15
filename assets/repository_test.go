@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/feduxorg/letter-generator-go/assets"
-	"github.com/feduxorg/letter-generator-go/test"
+	"github.com/feduxorg/letter-generator/assets"
+	"github.com/feduxorg/letter-generator/test"
 	"github.com/stretchr/testify/assert"
 )
 

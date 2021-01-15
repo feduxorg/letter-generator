@@ -4,9 +4,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/feduxorg/letter-generator-go/letter_generator"
-	lgos "github.com/feduxorg/letter-generator-go/os"
-	"github.com/feduxorg/letter-generator-go/pkg/api"
+	"github.com/feduxorg/letter-generator/letter_generator"
+	lgos "github.com/feduxorg/letter-generator/os"
+	"github.com/feduxorg/letter-generator/pkg/api"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )

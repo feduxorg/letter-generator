@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/feduxorg/letter-generator-go/converter"
+	"github.com/feduxorg/letter-generator/converter"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )

@@ -1,4 +1,4 @@
-module github.com/feduxorg/letter-generator-go
+module github.com/feduxorg/letter-generator
 
 go 1.12
 

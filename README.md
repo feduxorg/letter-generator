@@ -10,7 +10,7 @@ multiple recipients.
 * Install the letter generator
 
   ~~~bash
-  go get -u github.com/feduxorg/letter-generator-go
+  go get -u github.com/feduxorg/letter-generator
   ~~~
 
 * Install LaTeX
@@ -24,14 +24,14 @@ multiple recipients.
 
   ~~~bash
   # Clone repository
-  git clone https://github.com/feduxorg/letter-generator-go /tmp/letter-generator-go
+  git clone https://github.com/feduxorg/letter-generator /tmp/letter-generator
 
   # Either create your own templates or use our examples
 
   ## Move examples to the correct place
-  mv /tmp/letter-generator-go/docs/examples/en/ ~/.local/share/letter-template/
+  mv /tmp/letter-generator/docs/examples/en/ ~/.local/share/letter-template/
   ## or
-  mv /tmp/letter-generator-go/docs/examples/de/ ~/.local/share/letter-template/
+  mv /tmp/letter-generator/docs/examples/de/ ~/.local/share/letter-template/
 
   # setup git repository
   cd ~/.local/share/letter-template/
