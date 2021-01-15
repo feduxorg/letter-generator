@@ -23,7 +23,7 @@ jobs:
 
     - name: set up git2go for static mode
       run: |
-        go get -d github.com/libgit2/git2go/v31
+        go get -d github.com/libgit2/git2go
         cd $GOPATH/src/github.com/libgit2/git2go
         git checkout release-1.1
         git submodule update --init # get libgit2
