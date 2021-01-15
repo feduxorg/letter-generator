@@ -159,7 +159,7 @@ func parseGlobalOptions(c *cli.Context, config letter_generator.Config) {
 
 	log.WithFields(log.Fields{
 		"verbose": c.Bool("verbose"),
-	}).Info("Parsing commandline options")
+	}).Debug("Parsing commandline options")
 }
 
 func getCwd() string {
