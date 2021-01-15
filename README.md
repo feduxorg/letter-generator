@@ -91,6 +91,12 @@ bin/test
 
 Configuration for helper scripts is done via environment variables in [`env.sh`](env.sh).
 
+### Install locally after build
+
+~~~bash
+make install
+~~~
+
 ### Upgrade git2go / libgit2
 
 See https://github.com/libgit2/git2go#master-branch-or-vendored-static-linking

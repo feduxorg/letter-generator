@@ -14,7 +14,10 @@ else
 	  bin/test
 endif
 
-
 .PHONY: clean
 clean:
 	bin/clean
+
+.PHONY: install
+install: build
+	install -D dist/linux/amd64/lg ~/bin/lg
