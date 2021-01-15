@@ -16,7 +16,7 @@ type Cli struct{}
 func (p *Cli) Run(args []string) error {
 	app := cli.NewApp()
 	app.Name = "letter-generator"
-	app.Version = letter_generator.AppVersionNumber + "-" + letter_generator.CommitHash + "-" + letter_generator.BuildDate
+	app.Version = letter_generator.AppVersionNumber + "-" + letter_generator.CommitHash + "-" + letter_generator.GetBuildDate()
 
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{

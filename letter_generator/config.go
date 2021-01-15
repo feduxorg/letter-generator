@@ -2,13 +2,14 @@ package letter_generator
 
 import (
 	"fmt"
+	"time"
 )
 
 // The current build version.
 const AppVersionNumber = "dev"
 
 // SHA-value of git commit
-const CommitHash = ""
+const CommitHash = "HEAD"
 
 // Date of build
 const BuildDate = ""
@@ -36,5 +37,11 @@ func (c *Config) ToString() []string {
 	return result
 }
 
-func (c *Config) ToJson() {
+func GetBuildDate() string {
+	if BuildDate != "" {
+		return BuildDate
+	} else {
+		t := time.Now()
+		return t.Format("2006010_2150405")
+	}
 }
