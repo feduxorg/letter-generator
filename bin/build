@@ -1,11 +1,11 @@
-#!/usr/bin/env sh
-
-set -x
+#!/usr/bin/env bash
 
 : ${GOOS:=linux}
 : ${GOARCH:=amd64}
 
 COMMIT_HASH=$(git rev-parse --short HEAD 2>/dev/null)
 BUILD_DATE=$(date +%FT%T%z)
+VERSION=$(git tag | sort | tail -n 1)
+VERSION=${VERSION/v/};
 
-GO111MODULE=on CGO_ENABLED=0 go build  $* -a -installsuffix cgo -ldflags "-w -s -X github.com/feduxorg/letter-generator-go/cli.CommitHash=${COMMIT_HASH} -X github.com/feduxorg/letter-generator-go/cli.BuildDate=${BUILD_DATE}" -o dist/${GOOS}/${GOARCH}/lg cmd/lg
+GO111MODULE=on CGO_ENABLED=1 go build  $* -a -installsuffix cgo -ldflags "-w -s -X github.com/feduxorg/letter-generator-go/letter_generator.AppVersionNumber=${VERSION} -X github.com/feduxorg/letter-generator-go/letter_generator.CommitHash=${COMMIT_HASH} -X github.com/feduxorg/letter-generator-go/letter_generator.BuildDate=${BUILD_DATE}" -o dist/${GOOS}/${GOARCH}/lg ./cmd/lg
