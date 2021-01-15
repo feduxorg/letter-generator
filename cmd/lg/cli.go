@@ -14,20 +14,9 @@ import (
 type Cli struct{}
 
 func (p *Cli) Run(args []string) error {
-	appMetadata := letter_generator.AppMetadata{
-		Version: "0.0.1",
-		License: "MIT",
-		Authors: []letter_generator.AppAuthor{
-			letter_generator.AppAuthor{
-				Name:  "Dennis Günnewig",
-				Email: "dev@fedux.org",
-			},
-		},
-	}
-
 	app := cli.NewApp()
 	app.Name = "letter-generator"
-	app.Version = appMetadata.Version
+	app.Version = letter_generator.AppVersionNumber + "-" + letter_generator.CommitHash + "-" + letter_generator.BuildDate
 
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
