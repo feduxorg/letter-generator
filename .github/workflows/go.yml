@@ -22,6 +22,7 @@ jobs:
 
     - name: set up git2go for static mode
       run: |
+        export GOPATH=$HOME/go
         go get -v -d github.com/libgit2/git2go
         cd $GOPATH/*/github.com/libgit2/git2go
         git checkout release-1.1
