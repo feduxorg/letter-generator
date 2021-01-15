@@ -67,29 +67,3 @@ jobs:
         asset_name: letter-generator-linux_amd64.tar.gz
         asset_content_type: application/gzip
       if: startsWith(github.ref, 'refs/tags/')
-
-    - name: Upload release asset for windows amd64
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GOOS: windows
-        GOARCH: amd64
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/windows/amd64/letter-generator-windows_amd64.tar.gz
-        asset_name: letter-generator-windows_amd64.tar.gz
-        asset_content_type: application/gzip
-      if: startsWith(github.ref, 'refs/tags/')
-
-    - name: Upload release asset for darwin amd64
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GOOS: darwin
-        GOARCH: amd64
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/darwin/amd64/letter-generator-darwin_amd64.tar.gz
-        asset_name: letter-generator-darwin_amd64.tar.gz
-        asset_content_type: application/gzip
-      if: startsWith(github.ref, 'refs/tags/')
