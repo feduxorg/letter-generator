@@ -1,0 +1,73 @@
+\documentclass[%
+%fromphone=true,
+fromalign=left,
+foldmarks=BmTP,
+draft=true,
+]{scrlttr2}
+%%%%%%%%%%% Packages %%%%%%%%%%%%%%
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,german]{babel}
+\usepackage[%
+pdfborder=0 0 0,
+plainpages=false,
+pdftitle={titel},
+pdfauthor={ {{- .Sender.Name -}} },
+]{hyperref}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{blindtext}
+\usepackage{paralist}
+
+\begin{document}
+\pagestyle{headings}
+
+%%%%%%%%%%% Letter %%%%%%%%%%%%%%%%
+%%%%%%%%%%% Recipient %%%%%%%%%%%%%%%%%
+\begin{letter}{%
+{{ .Recipient.Name }}\\
+{{- $length := len .Recipient.C_O }}{{ if gt $length 0 }}
+{{ .Recipient.C_O }}\\
+{{ end -}}
+{{ .Recipient.Street }}\\
+{{ .Recipient.City }}\\
+}
+
+%%%%%%%%%%%%% Sender %%%%%%%%%%%%%%%%%
+\setkomavar{fromname}{ {{- .Sender.Name -}} }
+{{- $length := len .Sender.Phone }}{{ if gt $length 0 }}
+\setkomavar{fromphone}{ {{- .Sender.Phone -}} }
+{{ end -}}
+\setkomavar{fromaddress}{ {{- .Sender.Street }}\\{{ .Sender.City -}} }
+
+%%%%%%%%%%%%% Subject %%%%%%%%%%%%%%%%
+{{- $length := len .Subject }}{{ if gt $length 0 }}
+\setkomavar{subject}{ {{- .Subject -}} }
+{{- end }}
+
+%%%%%%%%%%%%% Signature %%%%%%%%%%%%%%%%
+{{- $length := len .Sender.Name}}{{ if gt $length 0 }}
+\setkomavar{signature}{ {{- .Sender.Name -}} }
+{{- end }}
+
+%\LoadLetterOption{DIN}
+
+{{- $length := len .Opening }}{{ if gt $length 0 }}
+\opening{ {{- .Opening -}} }
+{{- end }}
+
+TEXT
+
+\closing{ {{- .Closing -}} }
+%%%%%%%%%%%%% Postscriptum %%%%%%%%%%%%%%%
+{{- if eq .HasPs true }}
+\ps PS: 
+{{ end }}
+
+%%%%%%%%%%%%% Anhänge %%%%%%%%%%%%%%%
+{{- if eq .HasAttachments true }}
+\encl{}
+{{ end }}
+
+\end{letter}
+\end{document}
