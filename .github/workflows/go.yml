@@ -38,12 +38,12 @@ jobs:
         GOARCH: amd64
         GO_TAGS: static
 
-    - name: build windows amd64
-      run: bin/build
-      env:
-        GOOS: windows
-        GOARCH: amd64
-        GO_TAGS: static
+          # - name: build windows amd64
+          #   run: bin/build
+          #   env:
+          #     GOOS: windows
+          #     GOARCH: amd64
+          #     GO_TAGS: static
 
     - name: build darwin amd64
       run: bin/build
