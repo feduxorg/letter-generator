@@ -2,17 +2,7 @@ package letter_generator
 
 import (
 	"fmt"
-	"time"
 )
-
-// The current build version.
-const AppVersionNumber = "dev"
-
-// SHA-value of git commit
-const CommitHash = "HEAD"
-
-// Date of build
-const BuildDate = ""
 
 type Config struct {
 	ConfigDirectory string `yaml:config_directory`
@@ -35,13 +25,4 @@ func (c *Config) ToString() []string {
 	result = append(result, fmt.Sprintf("%20s | %-30s", "Assets Directory", c.AssetsDirectory))
 
 	return result
-}
-
-func GetBuildDate() string {
-	if BuildDate != "" {
-		return BuildDate
-	} else {
-		t := time.Now()
-		return t.Format(time.RFC3339)
-	}
 }

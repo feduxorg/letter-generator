@@ -11,12 +11,21 @@ import (
 	"github.com/urfave/cli"
 )
 
+// The current build version.
+var AppVersionNumber = "dev"
+
+// SHA-value of git commit
+var CommitHash = "HEAD"
+
+// Date of build
+var BuildDate = "NOW"
+
 type Cli struct{}
 
 func (p *Cli) Run(args []string) error {
 	app := cli.NewApp()
 	app.Name = "letter-generator"
-	app.Version = letter_generator.AppVersionNumber + "-" + letter_generator.CommitHash + "-" + letter_generator.GetBuildDate()
+	app.Version = AppVersionNumber + "-" + CommitHash + "-" + BuildDate
 
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
