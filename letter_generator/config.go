@@ -42,6 +42,6 @@ func GetBuildDate() string {
 		return BuildDate
 	} else {
 		t := time.Now()
-		return t.Format("2006010_2150405")
+		return t.Format(time.RFC3339)
 	}
 }

@@ -8,4 +8,5 @@ BUILD_DATE=$(date +%FT%T%z)
 VERSION=$(git tag | sort | tail -n 1)
 VERSION=${VERSION/v/};
 
+echo GO111MODULE=on CGO_ENABLED=1 go build  $* -a -installsuffix cgo -ldflags "-w -s -X github.com/feduxorg/letter-generator/letter_generator.AppVersionNumber=${VERSION} -X github.com/feduxorg/letter-generator/letter_generator.CommitHash=${COMMIT_HASH} -X github.com/feduxorg/letter-generator/letter_generator.BuildDate=${BUILD_DATE}" -o dist/${GOOS}/${GOARCH}/lg ./cmd/lg
 GO111MODULE=on CGO_ENABLED=1 go build  $* -a -installsuffix cgo -ldflags "-w -s -X github.com/feduxorg/letter-generator/letter_generator.AppVersionNumber=${VERSION} -X github.com/feduxorg/letter-generator/letter_generator.CommitHash=${COMMIT_HASH} -X github.com/feduxorg/letter-generator/letter_generator.BuildDate=${BUILD_DATE}" -o dist/${GOOS}/${GOARCH}/lg ./cmd/lg
