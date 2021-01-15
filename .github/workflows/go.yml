@@ -24,7 +24,7 @@ jobs:
       run: |
         export GOPATH=$HOME/go
         go get -v -d github.com/libgit2/git2go
-        cd $GOPATH/*/github.com/libgit2/git2go
+        find $GOPATH
         git checkout release-1.1
         git submodule update --init # get libgit2
         make install-static
