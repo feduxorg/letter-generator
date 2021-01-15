@@ -3,9 +3,8 @@
 This tool helps you to generate form letters, based on a template for
 multiple recipients.
 
-## Usage
 
-### Install
+## Setup
 
 * Install the letter generator
 
@@ -18,7 +17,9 @@ multiple recipients.
   Make sure, you installed LaTeX on your system. This tools uses
   `pdflatex` in the background to generate the PDF from your letter template.
 
-### Initialize
+## Usage
+
+### Initialize directory for your letter
 
 * (optional) Install examples
 
@@ -65,7 +66,7 @@ multiple recipients.
     lg init -V --template-source `https://github.com/xxxxx/xxxx.git`
     ~~~
 
-### Build
+### Build letters
 
 This will build the letters. Make sure you've initialized the directory before.
 
