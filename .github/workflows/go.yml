@@ -19,7 +19,7 @@ jobs:
     - name: Install external dependencies
       run: |
         sudo apt-get update -y \
-        && sudo apt-get install -y cmake pkg-config gcc libssh2-1-dev openssl-dev
+        && sudo apt-get install -y cmake pkg-config gcc libssh2-1-dev libssl-dev
 
     - name: set up git2go for static mode
       run: |
