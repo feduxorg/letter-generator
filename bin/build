@@ -2,11 +2,12 @@
 
 : ${GOOS:=linux}
 : ${GOARCH:=amd64}
+: ${GO_TAGS:=static,system_libgit2}
 
 COMMIT_HASH=$(git rev-parse --short HEAD 2>/dev/null)
 BUILD_DATE=$(date +%FT%T%z)
 VERSION=$(git tag | sort | tail -n 1)
 VERSION=${VERSION/v/};
 
-echo GO111MODULE=on CGO_ENABLED=1 go build  $* -ldflags "-w -s -X main.AppVersionNumber=${VERSION} -X main.CommitHash=${COMMIT_HASH} -X main.BuildDate=${BUILD_DATE}" -o dist/${GOOS}/${GOARCH}/lg ./cmd/lg
-GO111MODULE=on CGO_ENABLED=1 go build  $* -ldflags "-w -s -X main.AppVersionNumber=${VERSION} -X main.CommitHash=${COMMIT_HASH} -X main.BuildDate=${BUILD_DATE}" -o dist/${GOOS}/${GOARCH}/lg ./cmd/lg
+echo GO111MODULE=on CGO_ENABLED=1 go build --tags ${GO_TAGS} $* -ldflags "-w -s -X main.AppVersionNumber=${VERSION} -X main.CommitHash=${COMMIT_HASH} -X main.BuildDate=${BUILD_DATE}" -o dist/${GOOS}/${GOARCH}/lg ./cmd/lg
+GO111MODULE=on CGO_ENABLED=1 go build --tags ${GO_TAGS} $* -ldflags "-w -s -X main.AppVersionNumber=${VERSION} -X main.CommitHash=${COMMIT_HASH} -X main.BuildDate=${BUILD_DATE}" -o dist/${GOOS}/${GOARCH}/lg ./cmd/lg

@@ -19,7 +19,15 @@ jobs:
     - name: Install external dependencies
       run: |
         sudo apt-get update -y \
-        && sudo apt-get install -y libgit2-dev
+        && sudo apt-get install -y cmake pkg-config gcc libssh2-1-dev openssl-dev
+
+    - name: set up git2go for static mode
+      run: |
+        go get -d github.com/libgit2/git2go/v31
+        cd $GOPATH/src/github.com/libgit2/git2go
+        git checkout release-1.1
+        git submodule update --init # get libgit2
+        make install-static
 
     - name: get dependencies
       run: |
@@ -33,18 +41,21 @@ jobs:
       env:
         GOOS: linux
         GOARCH: amd64
+        BUILD_TAGS: static
 
     - name: build windows amd64
       run: bin/build
       env:
         GOOS: windows
         GOARCH: amd64
+        BUILD_TAGS: static
 
     - name: build darwin amd64
       run: bin/build
       env:
         GOOS: darwin
         GOARCH: amd64
+        BUILD_TAGS: static
 
     - name: package software for linux amd64
       run: bin/package

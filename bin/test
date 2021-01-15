@@ -1,3 +1,5 @@
 #!/usr/bin/env sh
 
-go test -v ./... $*
+: ${GO_TAGS:=static,system_libgit2}
+
+go test --tags ${GO_TAGS} -v ./... $*
